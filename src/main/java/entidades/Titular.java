@@ -55,6 +55,8 @@ public class Titular implements Serializable {
     @Basic(optional = false)
     @Column(name = "donante")
     private boolean donante;
+	@OneToMany(mappedBy= "titular")
+	private List<Licencia> licenciaList;
 
     public Titular() {
     }
