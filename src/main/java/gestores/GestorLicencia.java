@@ -43,7 +43,7 @@ public class GestorLicencia {
 		
 		Document documentoTicket= new Document(); //creo documento
         documentoTicket.setPageSize(PageSize.A4); //seteo tamaño de pagina
-        FileOutputStream ficheroPdf= new FileOutputStream("pdf\ticket.pdf"); //creo el fichero
+        FileOutputStream ficheroPdf= new FileOutputStream("ticket.pdf"); //creo el fichero
         PdfWriter.getInstance(documentoTicket,ficheroPdf).setInitialLeading(20); //obtengo una instancia del writer y seteo interlineado
         documentoTicket.open(); //abro documento
         
@@ -174,7 +174,7 @@ public class GestorLicencia {
         //Cantidad de Licencias Facturadas del mismo tipo
         int cantidadLicencia=1;
         PdfPCell cantidadCell= new PdfPCell();
-        Paragraph cantidad= new Paragraph(cantidadLicencia);
+        Paragraph cantidad= new Paragraph(Integer.toString(cantidadLicencia));
         cantidadCell.setBorderWidthLeft(0f);
         cantidadCell.setBorderWidthRight(0f);
         cantidadCell.setBorderWidthTop(0f);
@@ -182,14 +182,15 @@ public class GestorLicencia {
         
         //Costo unitario de la licencia
         PdfPCell precUnitCell= new PdfPCell();
-        Paragraph precUnit= new Paragraph(dtoLicencia.getCosto());
+        Paragraph precUnit= new Paragraph("$"+Integer.toString(dtoLicencia.getCosto()));
         precUnitCell.setBorderWidthLeft(0f);
         precUnitCell.setBorderWidthRight(0f);
         precUnitCell.setBorderWidthTop(0f);
         precUnitCell.addElement(precUnit);
         
+        //Importe a pagar por la licencia
         PdfPCell importeCell= new PdfPCell();
-        Paragraph importe= new Paragraph(cantidadLicencia*dtoLicencia.getCosto());
+        Paragraph importe= new Paragraph("$"+Integer.toString(cantidadLicencia*dtoLicencia.getCosto()));
         importeCell.setBorderWidthLeft(0f);
         importeCell.setBorderWidthRight(0f);
         importeCell.setBorderWidthTop(0f);
@@ -211,7 +212,7 @@ public class GestorLicencia {
         
         //Total a pagar
         PdfPCell totalCell= new PdfPCell();
-        Paragraph total= new Paragraph(cantidadLicencia*dtoLicencia.getCosto());
+        Paragraph total= new Paragraph("$"+Integer.toString(cantidadLicencia*dtoLicencia.getCosto()));
         totalCell.setBorderWidthLeft(0f);
         totalCell.setBorderWidthRight(0f);
         totalCell.setBorderWidthTop(0f);
@@ -234,7 +235,7 @@ public class GestorLicencia {
         
         documentoTicket.close();//cierro el documento
         
-        String path= new File("pdf\\ticket.pdf").getAbsolutePath(); //obtengo la ruta absoluta del pdf
+        String path= new File("ticket.pdf").getAbsolutePath(); //obtengo la ruta absoluta del pdf
         
         //abro el pdf
         Process process= Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL "+path);
