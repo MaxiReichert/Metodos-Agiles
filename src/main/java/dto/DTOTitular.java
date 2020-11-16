@@ -7,10 +7,18 @@ public class DTOTitular {
 	public String direccion;
 	public String nroDoc;
 	public String tipoDoc;
-	public String Donador;
+	public String donador;
 	public String grupoS;
 	public String factorS;
-	
+	public String fechaNac;
+	public String getFechaNac() {
+		return fechaNac;
+	}
+
+	public void setFechaNac(String fechaNac) {
+		this.fechaNac = fechaNac;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -47,11 +55,11 @@ public class DTOTitular {
 	}
 
 	public String getDonador() {
-		return Donador;
+		return donador;
 	}
 
 	public void setDonador(String donador) {
-		Donador = donador;
+		this.donador = donador;
 	}
 
 	public String getGrupoS() {

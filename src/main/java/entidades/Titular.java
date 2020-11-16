@@ -25,7 +25,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "titular")
 public class Titular implements Serializable {
-
+	
+	private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "tipo_doc")
     private String tipoDoc;

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package gestores;
+import dao.DAOTitular;
 
 public class GestorTitular {
 	private static GestorTitular GTitular ; // Patron Singleton -- Unica instancia tipo gestor creada.
@@ -18,10 +19,9 @@ public class GestorTitular {
 		return GTitular;
 	}
     
-	public boolean comprobarExistencia (int doc) { //Busca en BD si existe una entrada en la tabla titular con el nroDoc = doc, si existe, retorna true
-		boolean ret=true; //
-		//FALTA LOGICA
-		return ret;
+	public boolean comprobarExistencia (String doc) { //Busca en BD si existe una entrada en la tabla titular con el nroDoc = doc, si existe, retorna true
+	
+		return DAOTitular.titularExiste (doc);
 	}
 	
 	

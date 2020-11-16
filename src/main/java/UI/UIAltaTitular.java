@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
@@ -42,6 +43,7 @@ public class UIAltaTitular {
 	private ButtonGroup grupoDonador = new ButtonGroup();
 	DTOTitular DTOT = new DTOTitular();
 	GestorTitular gestorT = GestorTitular.getInstance();
+	SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
 	/**
 	 * Launch the application.
 	 */
@@ -294,6 +296,15 @@ public class UIAltaTitular {
 					int nroDoc = Integer.parseInt(tfNroDoc.getText());
 					if(!gestorT.comprobarExistencia(nroDoc)){ //Si no existe un titular registrado con ese Doc
 						lbEstado.setVisible(true);
+						dateFormat.format(dateCFechaNacimiento.getDate());
+						DTOT.setTipoDoc(comboTipoDoc.getSelectedItem().toString());
+						DTOT.setNroDoc(tfNroDoc.getText());
+						DTOT.setNombre(tfNombre.getText());
+						DTOT.setApellido(tfApellido.getText());
+						DTOT.setDireccion(tfDireccion.getText());
+						DTOT.setFactorS(tfFactor.getText());
+						DTOT.setGrupoS(tfGrupoSanguineo.getText());
+						DTOT.setFechaNac(dateFormat.toString());
 						lbEstado.setText("Prodece a crear");
 					}
 					else{ //Si existe titular con ese doc
