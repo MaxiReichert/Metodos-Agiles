@@ -3,20 +3,24 @@ package dao;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import entidades.Titular;
 import persistencia.MyEntityManager;
 
 public class DAOTitularJPA implements DAOTitular{
 	@Override
-	public boolean titularExiste(String nro) {
-		boolean ret= false;
+	public Titular obtenerTitular(String nro) {
+		int nroDoc = Integer.parseInt(nro);
 		EntityManager em= MyEntityManager.get();
-		long result= (Long) em.createQuery("SELECT nroDoc FROM titular where nroDoc = ?")
+		Titular result =(Titular) em.createQuery("SELECT * FROM titular where nroDoc = ?1")
 				.setParameter(1, nro)
 				.getSingleResult();
 		em.close();
-		if(result != 0) {
-			ret = true;
-		}
-		return ret;
+		return result;
+	}	
+	@Override
+	public void persistirTitular (Titular unTitular) {
+		EntityManager em= MyEntityManager.get();
+		em.persist(unTitular);
+		em.close();
 	}
 }
