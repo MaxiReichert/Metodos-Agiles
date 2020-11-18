@@ -60,9 +60,19 @@ public class Titular implements Serializable {
     private boolean donante;
 	@OneToMany(mappedBy= "titular")
 	private List<Licencia> licenciaList;
-
-    public Titular() {
+	
+	public Titular() {
     }
+
+    public List<Licencia> getLicenciaList() {
+		return licenciaList;
+	}
+
+	public void setLicenciaList(List<Licencia> licenciaList) {
+		this.licenciaList = licenciaList;
+	}
+
+	
 
     public String getTipoDoc() {
         return tipoDoc;
