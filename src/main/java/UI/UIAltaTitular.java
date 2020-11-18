@@ -181,18 +181,29 @@ public class UIAltaTitular {
 				{
 					e.consume();
 				}
-				if(tfDireccion.getText().length() > max) {
+				if(tfGrupoSanguineo.getText().length() > max) {
 					e.consume();
 				}
 			}
 		});
-		frmAltaCliente.getContentPane().add(tfGrupoSanguineo);
 		tfGrupoSanguineo.setColumns(10);
+		frmAltaCliente.getContentPane().add(tfGrupoSanguineo);
+
 		
 		
 		tfFactor = new JTextField();
 		tfFactor.setColumns(10);
 		tfFactor.setBounds(220, 230, 181, 20);
+		tfFactor.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				int max =1;
+				char caracter = e.getKeyChar();
+				if(tfFactor.getText().length() > max) {
+					e.consume();
+				}
+			}
+		});
 		frmAltaCliente.getContentPane().add(tfFactor);
 		
 
