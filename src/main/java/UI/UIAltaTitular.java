@@ -293,8 +293,7 @@ public class UIAltaTitular {
 					completo = false;
 				}
 				if (completo) { //Si todos los campos se completaron
-					int nroDoc = Integer.parseInt(tfNroDoc.getText());
-					if(!gestorT.comprobarExistencia(nroDoc)){ //Si no existe un titular registrado con ese Doc
+					if(!gestorT.comprobarExistencia(tfNroDoc.getText())){ //Si no existe un titular registrado con ese Doc
 						lbEstado.setVisible(true);
 						dateFormat.format(dateCFechaNacimiento.getDate());
 						DTOT.setTipoDoc(comboTipoDoc.getSelectedItem().toString());
