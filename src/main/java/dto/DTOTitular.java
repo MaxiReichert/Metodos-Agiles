@@ -2,15 +2,16 @@ package dto;
 
 public class DTOTitular {
 	
-	public String nombre;
-	public String apellido;
-	public String direccion;
-	public String nroDoc;
-	public String tipoDoc;
-	public String donador;
-	public String grupoS;
-	public String factorS;
-	public String fechaNac;
+	private String nombre;
+	private String apellido;
+	private String direccion;
+	private String nroDoc;
+	private String tipoDoc;
+	private String donador;
+	private String grupoS;
+	private String factorS;
+	private String fechaNac;
+	
 	public String getFechaNac() {
 		return fechaNac;
 	}

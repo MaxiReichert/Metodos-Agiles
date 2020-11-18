@@ -10,7 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.HashMap;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -21,7 +21,9 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.TabSettings;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -241,4 +243,237 @@ public class GestorLicencia {
         Process process= Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL "+path);
         
 	}
+
+	public void ImprimirLicencia(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
+		Document documento= new Document(); //creo el documento
+        documento.setPageSize(PageSize.A4.rotate()); //establezco tamaño de pagina en A4, orientacion horizontal
+        FileOutputStream ficheroPdf= new FileOutputStream("licencia.pdf");// creo el fichero
+        PdfWriter writer= PdfWriter.getInstance(documento, ficheroPdf);// obtengo una isntancia de PdfWriter
+        documento.open();// abro el documento
+        
+        
+        PdfContentByte canvas= writer.getDirectContent(); //creo un contenedor para dibujar
+        Rectangle rectAdelante= new Rectangle(50,430,275,545); //creo el rectangulo para la parte de adelante de la licencia
+        rectAdelante.setBorder(Rectangle.BOX);// le seteo los bordes
+        rectAdelante.setBorderWidth((float) 0.5);// seteo el ancho de los bordes
+        canvas.rectangle(rectAdelante);// dobujo el rectangulo
+        
+        // creo las fuentes que voy a usar en el archivo
+        Font fontLocalidad= new Font(FontFamily.TIMES_ROMAN, 7, Font.BOLD, BaseColor.BLACK);
+        Font fontCatDatos= new Font(FontFamily.TIMES_ROMAN, 5, Font.NORMAL, BaseColor.BLACK);
+        Font fontDatosEnNegro= new Font(FontFamily.TIMES_ROMAN, 5, Font.BOLD, BaseColor.BLACK);
+        Font fontDatosEnRojo= new Font(FontFamily.TIMES_ROMAN, 5, Font.BOLD, BaseColor.RED);
+        
+        // creo el texto que indica localidad y provincia
+        Paragraph locProv= new Paragraph();
+        locProv.setFont(fontLocalidad);// seteo fuente al parrafo
+        locProv.setTabSettings(new TabSettings(40));// seteo tabulacion
+        locProv.setLeading(12);// seteo interlineado del parrafo
+        locProv.add(new Chunk("\n\n"));
+        locProv.add(Chunk.TABBING);// aplico la tabulacion
+        locProv.add(new Chunk("SANTA FE - SANTA FE"));
+        documento.add(locProv);// agrego el parrafo al documento
+        
+        //linea que muestra el numero de licencia
+        Paragraph numLic= new Paragraph();
+        numLic.setFont(fontCatDatos); // seteo la fuente al parrafo
+        numLic.setTabSettings(new TabSettings(95));// seteo la tabulacion al parrafo
+        numLic.add(Chunk.TABBING);// aplico la tabulacion
+        numLic.add(new Chunk("LICENCIA Nº "));
+        Chunk numLicText= new Chunk(dtoTitular.getNroDoc()); // creo un chunk aparte para poder ponerle propiedades distintas al parrafo
+        numLicText.setFont(fontDatosEnRojo);// seteo la fuente al chunk que contiene el numero de doc
+        numLic.add(numLicText);// agrego el chunk que tiene el numero de doc al parrafo
+        documento.add(numLic);// agrego el parrafo al documento
+        
+        //linea que muestra el apellido del titular
+        Paragraph apellido= new Paragraph();
+        apellido.setFont(fontCatDatos);// seteo la fuente al parrafo
+        apellido.setLeading(8);// seteo el interlineado al parrafo
+        apellido.setTabSettings(new TabSettings(99));// seteo la tabulacion al parrafo
+        apellido.add(Chunk.TABBING);// aplico la tabulacion
+        apellido.add(new Chunk("APELLIDO "));
+        Chunk apellidoTitular= new Chunk(dtoTitular.getApellido().toUpperCase());// creo un chunk que cotiene el apellido del titular
+        apellidoTitular.setFont(fontDatosEnNegro);// seteo la fuente para el apellido del titular
+        apellido.add(apellidoTitular);// agreog el apellido del titular al parrafo
+        documento.add(apellido);// agrego el parrafo al documento
+        
+        //linea que muesta el nombre
+        Paragraph nombre= new Paragraph();
+        nombre.setFont(fontCatDatos);// seteo la fuente al parrafo
+        nombre.setLeading(8);// seteo interlineado al parrafo
+        nombre.setTabSettings(new TabSettings(102));// seteo tabulacion al parrafo
+        nombre.add(Chunk.TABBING);// aplico tabulacion
+        nombre.add(new Chunk("NOMBRE "));
+        Chunk nombreTitular= new Chunk(dtoTitular.getNombre().toUpperCase()); // creo un chunk que contiene el nombre del titular
+        nombreTitular.setFont(fontDatosEnNegro);// seteo la fuente al nombre
+        nombre.add(nombreTitular);// agrego el nombre al parrafo
+        documento.add(nombre);// agrego el parrafo al documento
+        
+        //linea que muestra la fecha de nacimiento
+        Paragraph fechaNac= new Paragraph();
+        fechaNac.setFont(fontCatDatos);// seteo la fuente al parrafo
+        fechaNac.setLeading(8);// seteo el itnerlineado
+        fechaNac.setTabSettings(new TabSettings(88));// seteo la tabulacion
+        fechaNac.add(Chunk.TABBING);// aplico la tabulacion
+        fechaNac.add(new Chunk("FECHA DE NAC "));
+        Chunk fechaNacTitular= new Chunk(dtoTitular.getFechaNac());// creo un chunk con la fecha de nacimiento del titular
+        fechaNacTitular.setFont(fontDatosEnNegro);// seteo la fuente a la fecha de nacimiento
+        fechaNac.add(fechaNacTitular);// agrego la fecha de nacimiento al parrafo
+        documento.add(fechaNac);// agrego el parrafo al documento
+       
+        //linea que muestra la direccion del titular
+        Paragraph domicilio= new Paragraph();
+        domicilio.setFont(fontCatDatos);// seteo fuente al parrafo
+        domicilio.setLeading(8);// seteo interlineado al parrafo
+        domicilio.setTabSettings(new TabSettings(98));// seteo tabulacion al parrafo
+        domicilio.add(Chunk.TABBING);// aplico tabulacion
+        domicilio.add(new Chunk("DOMICILIO "));
+        Chunk domicilioTitular= new Chunk(dtoTitular.getDireccion().toUpperCase());// creo un chunk que contiene la direccion del titular
+        domicilioTitular.setFont(fontDatosEnNegro);// seteo la fuente a la direccion
+        domicilio.add(domicilioTitular);// agrego la direccion al parrafo
+        documento.add(domicilio);// agrego el parrafo al documento
+        
+        //linea que muestra la localidad del titular
+        Paragraph localidad= new Paragraph();
+        localidad.setFont(fontCatDatos); //seteo fuente al parrafo
+        localidad.setLeading(8); //seteo interlineado al parrafo
+        localidad.setTabSettings(new TabSettings(96)); //seteo tabulacion
+        localidad.add(Chunk.TABBING); //aplico tabulacion
+        localidad.add(new Chunk("LOCALIDAD "));
+        Chunk localidadTitular= new Chunk("SANTA FE");
+        localidadTitular.setFont(fontDatosEnNegro); // seteo fuente de la localicad
+        localidad.add(localidadTitular); // agrego localidad al parrafo
+        documento.add(localidad); // agrego parrafo al documento
+        
+        //linea que muestra la nacionalidad del titular
+        Paragraph nacionalidad= new Paragraph();
+        nacionalidad.setFont(fontCatDatos); //seteo fuente al parrafo
+        nacionalidad.setLeading(8); //seteo el interlineado
+        nacionalidad.setTabSettings(new TabSettings(86)); //seteo el tabulado
+        nacionalidad.add(Chunk.TABBING); //aplico el tabulado
+        nacionalidad.add(new Chunk("NACIONALIDAD "));
+        Chunk nacionalidadTitular= new Chunk("ARGENTINA");
+        nacionalidadTitular.setFont(fontDatosEnNegro); //seteo la fuente a la nacionalidad
+        nacionalidad.add(nacionalidadTitular);// agrego la nacionalidad al parrafo
+        documento.add(nacionalidad); // agrego la nacionalidad al parrafo
+        
+        Paragraph fechaOtorVenc= new Paragraph();
+        fechaOtorVenc.setFont(fontCatDatos); //seteo la fuente al parrafo
+        fechaOtorVenc.setLeading(8); //seteo el interlineado
+        fechaOtorVenc.setTabSettings(new TabSettings(84)); // seteo el tabulaod
+        fechaOtorVenc.add(Chunk.TABBING);// aplico el tabulado
+        fechaOtorVenc.add(new Chunk("OTORGAMIENTO "));
+        Chunk fechaOtor= new Chunk(dtoLicencia.getFechaOtor()); //creo un chunk con la fecha de otorgamiento
+        fechaOtor.setFont(fontDatosEnNegro); //seteo la fuente a la fecha de otorgamiento
+        fechaOtorVenc.add(fechaOtor); //agreog al parrafo la fecha de otorgamiento
+        Chunk fechaVenc= new Chunk("    VTO "+dtoLicencia.getFechaVenc()); // creo un chunk con la fecha de vencimeinto
+        fechaVenc.setFont(fontDatosEnRojo); //seteo la fuente a la fecha de vencimiento
+        fechaOtorVenc.add(fechaVenc); //agrego la fecha de vencimeinto al parrafo
+        documento.add(fechaOtorVenc); //agrego el parrafo al documento
+        
+        Paragraph clase= new Paragraph();
+        clase.setFont(fontCatDatos); //seteo la fuente al parrafo
+        clase.setLeading(8); //seteo el interlineado
+        clase.setTabSettings(new TabSettings(108)); //seteo la tabulacion
+        clase.add(Chunk.TABBING);// aplico la tabulacion
+        clase.add(new Chunk("CLASE "));
+        Chunk claseLic= new Chunk(dtoLicencia.getTipo().toUpperCase()); //creo un chunk con la clase de licencia
+        claseLic.setFont(fontDatosEnRojo); //seteo fuente a la clase de licencia
+        clase.add(claseLic); //agrego la clase de licencia al parrafo
+        documento.add(clase); //agrego el parrafo al documento
+        
+        Image escudoProv= Image.getInstance("src\\main\\resources\\imagenes\\escudoProvSantaFe.png"); //obtengo la imagen
+        escudoProv.scalePercent(6); //seteo el tamaño como una escala porcentual del tamaño original
+        escudoProv.setAbsolutePosition(240, 520);// seteo la posicion en el documento
+        documento.add(escudoProv);// agrego la imagen al documento
+        
+        Image avatar= Image.getInstance("src\\main\\resources\\imagenes\\avatar.png"); //obtengo la imagen
+        avatar.scalePercent(4); //seteo el tamaño como escala porcentual del tamaño real
+        avatar.setAbsolutePosition(70, 470); //seteo la posicion en el documento
+        documento.add(avatar); //agrego la imagen al documento
+        
+        Rectangle rectAtras= new Rectangle(50,285,275,400); //creo el rectangulo para la parte de atras
+        rectAtras.setBorder(Rectangle.BOX); //seteo los bordes
+        rectAtras.setBorderWidth((float) 0.5);// setel el anchi de los bordes
+        canvas.rectangle(rectAtras);// dibujo el rectangulo
+        
+        //fuente para el texto de la parte de atras de la licencia
+        Font fontAtras= new Font(FontFamily.TIMES_ROMAN, 6, Font.NORMAL, BaseColor.BLACK);
+        
+        //seteo un conjunto de lineas en blanco para poder escribir dentro del rectangulo
+        documento.add(Chunk.NEWLINE);
+        documento.add(Chunk.NEWLINE);
+        documento.add(Chunk.NEWLINE);
+        documento.add(Chunk.NEWLINE);
+        documento.add(Chunk.NEWLINE);
+        documento.add(Chunk.NEWLINE);
+        
+        //linea que muestra el tipo de la licencia
+        Paragraph claseDescript= new Paragraph();
+        claseDescript.setFont(fontAtras); // seteo fuente al parrafo
+        claseDescript.setLeading(10); //seteo el interlineado
+        claseDescript.setTabSettings(new TabSettings(75)); //seteo tabulacion
+        claseDescript.add(Chunk.TABBING); // aplico tabulacion
+        
+        /* HashMap que contiene la descripcion de cada clase
+           Los espacios en las descripciones son para alinear el inicio del texto despues de un salto de linea*/
+        HashMap<String,String> descriptClase= new HashMap<String, String>();
+        descriptClase.put("A", "CICLOMOTORES, MOTOCICLETAS Y TRICICLOS MOTORIZAODS");
+        descriptClase.put("B", "AUTOMOVILES Y CAMIONETAS");
+        descriptClase.put("C", "CAMIONES SIN ACOPLADOS Y LOS COMPRENDIDOS \n                                       "
+        		+ "           EN LA CLASE B");
+        descriptClase.put("D", "SERVICIO DE TRANSPORTE DE PASAJEROS, \n                              "
+        		+ "                    EMERGENCIAS, SEGURIDAD Y LOS DE CLASE C O B");
+        descriptClase.put("E", "CAMIONES ARTICULADOS O CON ACOPLADO, \n       "
+        		+ "                                          MAQUINARIAS ESPECIAL NO AGRICOLA Y LOS DE \n"
+        		+ "                                                 CLASE B Y C");
+        descriptClase.put("F", "AUTOMOTORES ADAPTADOS PARA DISCAPACITADOS");
+        descriptClase.put("G", "TRACTORES AGRICOLAS Y MAQUINARIA ESPECIAL \n                                         "
+        		+ "         AGRICOLA");
+        
+        claseDescript.add(new Chunk(dtoLicencia.getTipo().toUpperCase()+" - "+descriptClase.get(dtoLicencia.getTipo())));
+        documento.add(claseDescript); //agrego el parrafo al documento
+        
+        Image codigoQR= Image.getInstance("src\\main\\resources\\imagenes\\codigo qr.png"); //obtengo la imagen
+        codigoQR.scalePercent(15); //le seteo el tamaño de acuerdo a un porcentaje del tamaño real
+        codigoQR.setAbsolutePosition(61, 357); //seteo la posicion en el documento
+        documento.add(codigoQR); //añado la imagen al documento
+        
+        Paragraph observaciones= new Paragraph();
+        observaciones.setFont(fontAtras); //seteo la fuente al parrafo
+        observaciones.setLeading(40); //seteo el interlineado del parrafo
+        observaciones.setTabSettings(new TabSettings(28)); //seteo el tabulado
+        observaciones.add(Chunk.TABBING); //aplico el tabulado
+        observaciones.add(new Chunk("OBSERVACIONES: "+dtoLicencia.getObservaciones().toUpperCase()));
+        documento.add(observaciones); //añado el parrafo al documento
+        
+       //linea que dice si el titular es donante o no
+        Paragraph donante= new Paragraph();
+        donante.setFont(fontAtras); //seteo la fuente al parrafo
+        donante.setLeading(15); // seteo el interlineado
+        donante.setTabSettings(new TabSettings(28)); //seteo el tabulado
+        donante.add(Chunk.TABBING); //aplico el tabulado
+        donante.add(new Chunk("DONANTE: "+dtoTitular.getDonador().toUpperCase())); 
+        documento.add(donante); //agrego el parrafo al documento
+        
+        //linea que muestra grupo y factor sanguineo del titular
+        Paragraph grupoFactor= new Paragraph();
+        grupoFactor.setFont(fontAtras); //seteo la fuente al parrafo
+        grupoFactor.setLeading(15); //seteo el interlineado
+        grupoFactor.setTabSettings(new TabSettings(28)); //seteo el tabulado
+        grupoFactor.add(Chunk.TABBING); //aplico el tabulaod
+        grupoFactor.add(new Chunk("GRUPO Y FACTOR: "+dtoTitular.getGrupoS().toUpperCase()+dtoTitular.getFactorS()));
+        documento.add(grupoFactor); //agrego el parrafo al documento
+        
+        
+        documento.close(); //cierro el documento
+        
+        String path= new File("licencia.pdf").getAbsolutePath(); //obtengo la ruta absoluta del pdf
+        
+        //abro el pdf
+        Process process= Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL "+path);
+	}
+
 }
+
+	
