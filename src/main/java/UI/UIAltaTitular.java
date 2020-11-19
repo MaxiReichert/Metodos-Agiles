@@ -30,6 +30,7 @@ import enumeradores.tipoLicencia;
 import gestores.GestorTitular;
 
 import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
 
 public class UIAltaTitular {
 
