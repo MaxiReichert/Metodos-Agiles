@@ -5,10 +5,17 @@
  */
 package gestores;
 
+import entidades.Usuario;
+
 /**
  *
  * @author Maxi
  */
 public class GestorUsuario {
-    
+    public static Usuario obtenerUsuarioActual(){
+    	Usuario usuarioActual = new Usuario();
+    	usuarioActual.setTipoDoc("DNI");
+    	usuarioActual.setNumeroDoc("11111111");
+    	return usuarioActual;
+    }
 }

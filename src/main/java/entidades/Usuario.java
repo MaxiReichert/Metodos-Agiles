@@ -33,7 +33,7 @@ public class Usuario implements Serializable {
     private String tipoDoc;
     @Basic(optional = false)
     @Column(name = "numero_doc")
-    private int numeroDoc;
+    private String numeroDoc;
     @Basic(optional = false)
     @Column(name = "apellido")
     private String apellido;
@@ -68,12 +68,12 @@ public class Usuario implements Serializable {
         this.tipoDoc = tipoDoc;
     }
 
-    public int getNumeroDoc() {
+    public String getNumeroDoc() {
         return numeroDoc;
     }
 
-    public void setNumeroDoc(int numeroDoc) {
-        this.numeroDoc = numeroDoc;
+    public void setNumeroDoc(String string) {
+        this.numeroDoc = string;
     }
 
     public String getApellido() {

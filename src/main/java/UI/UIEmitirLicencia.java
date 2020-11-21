@@ -9,6 +9,10 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.UIManager;
 import com.toedter.calendar.JDateChooser;
+
+import dto.DTOTitular;
+import gestores.GestorTitular;
+
 import java.awt.SystemColor;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -17,6 +21,8 @@ import java.awt.Font;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class UIEmitirLicencia {
 
@@ -69,6 +75,19 @@ public class UIEmitirLicencia {
 		frmAltaCliente.getContentPane().add(nroDocTextField);
 		nroDocTextField.setColumns(10);
 		
+		JLabel titularSeleccionadoLabel = new JLabel("Titular Seleccionado");
+		titularSeleccionadoLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
+		titularSeleccionadoLabel.setBounds(79, 159, 227, 31);
+		frmAltaCliente.getContentPane().add(titularSeleccionadoLabel);
+		
+		titularSeleccionadoTextField = new JTextField();
+		titularSeleccionadoTextField.setFont(new Font("Monospaced", Font.PLAIN, 16));
+		titularSeleccionadoTextField.setForeground(Color.RED);
+		titularSeleccionadoTextField.setEditable(false);
+		titularSeleccionadoTextField.setBounds(319, 157, 418, 34);
+		frmAltaCliente.getContentPane().add(titularSeleccionadoTextField);
+		titularSeleccionadoTextField.setColumns(10);
+		
 		JTextArea txtTipoDOC = new JTextArea();
 		txtTipoDOC.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		txtTipoDOC.setBackground(UIManager.getColor("CheckBox.background"));
@@ -85,31 +104,44 @@ public class UIEmitirLicencia {
 		frmAltaCliente.getContentPane().add(txtNroDOC);
 		
 		JButton seleccionarTitularButton = new JButton("Seleccionar Titular");
+		seleccionarTitularButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(txtNroDOC.getText().length()>3) {
+					DTOTitular titular = new DTOTitular();
+					try {
+						titular = new GestorTitular().obtenerTitular(txtNroDOC.getText());
+						if(titular!=null) {
+							titularSeleccionadoTextField.setText('['+titular.getTipoDoc()+"] " + titular.getNroDoc() + " - "+titular.getApellido()+", "+titular.getNombre());
+							titularSeleccionadoTextField.setForeground(Color.GREEN);
+						}
+						else {
+							titularSeleccionadoTextField.setText("TITULAR NO ENCONTRADO");
+							titularSeleccionadoTextField.setForeground(Color.RED);
+						}
+					} catch (Exception ex){
+						titularSeleccionadoTextField.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
+						titularSeleccionadoTextField.setForeground(Color.RED);
+						System.err.println(ex.getMessage());
+					}
+					
+				}
+			}
+		});
 		seleccionarTitularButton.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		seleccionarTitularButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		seleccionarTitularButton.setBounds(556, 79, 220, 34);
+		seleccionarTitularButton.setBounds(544, 79, 220, 34);
 		frmAltaCliente.getContentPane().add(seleccionarTitularButton);
 		
-		JLabel titularSeleccionadoLabel = new JLabel("Titular Seleccionado");
-		titularSeleccionadoLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		titularSeleccionadoLabel.setBounds(79, 159, 227, 31);
-		frmAltaCliente.getContentPane().add(titularSeleccionadoLabel);
-		
-		titularSeleccionadoTextField = new JTextField();
-		titularSeleccionadoTextField.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		titularSeleccionadoTextField.setForeground(Color.RED);
-		titularSeleccionadoTextField.setEditable(false);
-		titularSeleccionadoTextField.setBounds(319, 157, 287, 34);
-		frmAltaCliente.getContentPane().add(titularSeleccionadoTextField);
-		titularSeleccionadoTextField.setColumns(10);
+
 		
 		JComboBox<String> comboTipoLicencia = new JComboBox<String>();
 		comboTipoLicencia.setModel(new DefaultComboBoxModel<String>(new String[] {"A", "B", "C", "D", "E", "F", "G"}));
 		comboTipoLicencia.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		comboTipoLicencia.setBounds(319, 258, 287, 35);
+		comboTipoLicencia.setBounds(319, 258, 95, 35);
 		DefaultListCellRenderer centeredListRenderer = new DefaultListCellRenderer();
 	    centeredListRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER); // center-aligned items
 	    comboTipoLicencia.setRenderer(centeredListRenderer);
