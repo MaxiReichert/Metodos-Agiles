@@ -1,12 +1,15 @@
 package dto;
 
+import java.util.Date;
+
 public class DTOLicencia {
 	
 	private String tipo;
 	private int costo;
-	private String fechaOtor;
-	private String fechaVenc;
+	private Date fechaOtor;
+	private Date fechaVenc;
 	private String observaciones; 
+	private DTOTitular titular;
 	
 	public String getTipo() {
 		return tipo;
@@ -17,19 +20,25 @@ public class DTOLicencia {
 	public int getCosto() {
 		return costo;
 	}
+	public DTOTitular getTitular() {
+		return titular;
+	}
+	public void setTitular (DTOTitular titular) {
+		this.titular = titular;
+	}
 	public void setCosto(int costo) {
 		this.costo = costo;
 	}
-	public String getFechaOtor() {
+	public Date getFechaOtor() {
 		return fechaOtor;
 	}
-	public void setFechaOtor(String fechaOtor) {
+	public void setFechaOtor(Date fechaOtor) {
 		this.fechaOtor = fechaOtor;
 	}
-	public String getFechaVenc() {
+	public Date getFechaVenc() {
 		return fechaVenc;
 	}
-	public void setFechaVenc(String fechaVenc) {
+	public void setFechaVenc(Date fechaVenc) {
 		this.fechaVenc = fechaVenc;
 	}
 	public String getObservaciones() {

@@ -1,5 +1,8 @@
 package dto;
 
+import java.util.Date;
+import java.util.List;
+
 public class DTOTitular {
 	
 	private String nombre;
@@ -7,16 +10,17 @@ public class DTOTitular {
 	private String direccion;
 	private String nroDoc;
 	private String tipoDoc;
-	private String donador;
+	private boolean donador;
 	private String grupoS;
 	private String factorS;
-	private String fechaNac;
+	private Date fechaNac;
+	private List<DTOLicencia> licenciaList;
 	
-	public String getFechaNac() {
+	public Date getFechaNac() {
 		return fechaNac;
 	}
 
-	public void setFechaNac(String fechaNac) {
+	public void setFechaNac(Date fechaNac) {
 		this.fechaNac = fechaNac;
 	}
 
@@ -55,11 +59,11 @@ public class DTOTitular {
 		this.tipoDoc = tipoDoc;
 	}
 
-	public String getDonador() {
+	public boolean getDonador() {
 		return donador;
 	}
 
-	public void setDonador(String donador) {
+	public void setDonador(boolean donador) {
 		this.donador = donador;
 	}
 
@@ -78,6 +82,13 @@ public class DTOTitular {
 	public void setFactorS(String factorS) {
 		this.factorS = factorS;
 	}
-	
+
+	public List<DTOLicencia> getLicenciaList() {
+		return licenciaList;
+	}
+
+	public void setLicenciaList(List<DTOLicencia> licenciaDTOList) {
+		this.licenciaList = licenciaDTOList;
+	}
 	
 }

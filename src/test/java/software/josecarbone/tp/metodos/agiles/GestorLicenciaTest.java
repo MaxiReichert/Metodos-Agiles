@@ -3,6 +3,7 @@ package software.josecarbone.tp.metodos.agiles;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -46,15 +47,15 @@ public class GestorLicenciaTest {
 		
 		dtoTitular.setApellido("Reichert");
 		dtoTitular.setDireccion("Calle Siempre Viva 234");
-		dtoTitular.setDonador("si");
+		dtoTitular.setDonador(true);
 		dtoTitular.setFactorS("+");
 		dtoTitular.setGrupoS("0");
 		dtoTitular.setNombre("Maximiliano");
 		dtoTitular.setNroDoc("38260807");
-		dtoTitular.setFechaNac("06/06/1994");
+		dtoTitular.setFechaNac(new Date("06/06/1994"));
 		
-		dtoLicencia.setFechaOtor("03/06/2017");
-		dtoLicencia.setFechaVenc("06/06/2021");
+		dtoLicencia.setFechaOtor(new Date("03/06/2017"));
+		dtoLicencia.setFechaVenc(new Date("06/06/2021"));
 		dtoLicencia.setObservaciones("Utiliza anteojos para conducir");
 		dtoLicencia.setTipo("G");
 		try {

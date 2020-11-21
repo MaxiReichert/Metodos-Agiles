@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.function.Predicate;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -32,6 +34,11 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 import dao.DAOLicenciaJPA;
 import dto.DTOLicencia;
 import dto.DTOTitular;
+import entidades.Licencia;
+import entidades.Titular;
+import entidades.Tramite;
+import entidades.Usuario;
+import exceptions.EmitirLicenciaException;
 
 /**
  *
@@ -39,6 +46,8 @@ import dto.DTOTitular;
  */
 public class GestorLicencia {
     
+	private final static long SECONDS_IN_YEAR = 31536000;
+
 	public void ImprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
 		DAOLicenciaJPA daoLicencia= new DAOLicenciaJPA(); //creo una instancia de la DAO de licencia
 		String numeroFactura= Long.toString(daoLicencia.ObtenerNumeroFactura()); //obtengo el numero de la factura
@@ -245,6 +254,7 @@ public class GestorLicencia {
 	}
 
 	public void ImprimirLicencia(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
+		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy"); //formato fecha
 		Document documento= new Document(); //creo el documento
         documento.setPageSize(PageSize.A4.rotate()); //establezco tamaño de pagina en A4, orientacion horizontal
         FileOutputStream ficheroPdf= new FileOutputStream("licencia.pdf");// creo el fichero
@@ -316,7 +326,7 @@ public class GestorLicencia {
         fechaNac.setTabSettings(new TabSettings(88));// seteo la tabulacion
         fechaNac.add(Chunk.TABBING);// aplico la tabulacion
         fechaNac.add(new Chunk("FECHA DE NAC "));
-        Chunk fechaNacTitular= new Chunk(dtoTitular.getFechaNac());// creo un chunk con la fecha de nacimiento del titular
+        Chunk fechaNacTitular= new Chunk(sdf.format(dtoTitular.getFechaNac()));// creo un chunk con la fecha de nacimiento del titular
         fechaNacTitular.setFont(fontDatosEnNegro);// seteo la fuente a la fecha de nacimiento
         fechaNac.add(fechaNacTitular);// agrego la fecha de nacimiento al parrafo
         documento.add(fechaNac);// agrego el parrafo al documento
@@ -363,10 +373,10 @@ public class GestorLicencia {
         fechaOtorVenc.setTabSettings(new TabSettings(84)); // seteo el tabulaod
         fechaOtorVenc.add(Chunk.TABBING);// aplico el tabulado
         fechaOtorVenc.add(new Chunk("OTORGAMIENTO "));
-        Chunk fechaOtor= new Chunk(dtoLicencia.getFechaOtor()); //creo un chunk con la fecha de otorgamiento
+        Chunk fechaOtor= new Chunk(sdf.format(dtoLicencia.getFechaOtor())); //creo un chunk con la fecha de otorgamiento
         fechaOtor.setFont(fontDatosEnNegro); //seteo la fuente a la fecha de otorgamiento
         fechaOtorVenc.add(fechaOtor); //agreog al parrafo la fecha de otorgamiento
-        Chunk fechaVenc= new Chunk("    VTO "+dtoLicencia.getFechaVenc()); // creo un chunk con la fecha de vencimeinto
+        Chunk fechaVenc= new Chunk("    VTO "+sdf.format(dtoLicencia.getFechaVenc())); // creo un chunk con la fecha de vencimeinto
         fechaVenc.setFont(fontDatosEnRojo); //seteo la fuente a la fecha de vencimiento
         fechaOtorVenc.add(fechaVenc); //agrego la fecha de vencimeinto al parrafo
         documento.add(fechaOtorVenc); //agrego el parrafo al documento
@@ -453,7 +463,10 @@ public class GestorLicencia {
         donante.setLeading(15); // seteo el interlineado
         donante.setTabSettings(new TabSettings(28)); //seteo el tabulado
         donante.add(Chunk.TABBING); //aplico el tabulado
-        donante.add(new Chunk("DONANTE: "+dtoTitular.getDonador().toUpperCase())); 
+        
+        if(dtoTitular.getDonador()) donante.add(new Chunk("DONANTE: SI"));
+        else donante.add(new Chunk("DONANTE: SI"));
+        
         documento.add(donante); //agrego el parrafo al documento
         
         //linea que muestra grupo y factor sanguineo del titular
@@ -472,6 +485,76 @@ public class GestorLicencia {
         
         //abro el pdf
         Process process= Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL "+path);
+	}
+
+	public static void emitirLicencia(DTOLicencia DTOLicencia) throws EmitirLicenciaException{
+		
+		String tipo = DTOLicencia.getTipo();
+		
+		DTOTitular titularDTO = DTOLicencia.getTitular();
+		
+		long timeToday = Calendar.getInstance().getTime().getTime();
+		long timeBorn = titularDTO.getFechaNac().getTime();
+		
+		if(tipo == "A" || tipo == "B" || tipo == "F" || tipo == "G") {
+			
+			if( timeToday - timeBorn  < SECONDS_IN_YEAR * 17) {
+				throw new EmitirLicenciaException("El titular debe tener 17 años o más para obtener una licencia de clase "+tipo);
+			}
+		}else if(tipo == "C" || tipo == "D" || tipo == "E") {
+			if( timeToday - timeBorn  < SECONDS_IN_YEAR * 21 ) {
+				throw new EmitirLicenciaException("El titular debe tener 21 años o más para obtener una licencia de clase "+tipo);
+			}
+			Predicate<DTOLicencia> licenciaBUnAnioAntesPredicate = lic -> lic.getTipo() == "B" && timeToday - lic.getFechaOtor().getTime() >= SECONDS_IN_YEAR;
+			Predicate<DTOLicencia> licenciaProfesionalPredicate = lic -> lic.getTipo() == "C" || lic.getTipo() == "D" || lic.getTipo() == "E";
+			
+			boolean alMenosLicenciaBUnAnioAntes = titularDTO.getLicenciaList().stream().anyMatch(licenciaBUnAnioAntesPredicate);
+			
+			if(!alMenosLicenciaBUnAnioAntes) {
+				throw new EmitirLicenciaException("El titular debe haber obtenido una licencia de clase B, como mínimo, un año antes");
+			}
+				
+			if(timeToday - timeBorn >= 65*SECONDS_IN_YEAR) {
+				boolean existeLicenciaProfesionalPrevia = titularDTO.getLicenciaList().stream().anyMatch(licenciaProfesionalPredicate);				
+				if(!existeLicenciaProfesionalPrevia) {
+					throw new EmitirLicenciaException("El titular debe ser menor a 65 años para obtener su primera licencia profesional");
+				}
+			}
+		}
+		Predicate<DTOLicencia> licenciaDelMismoTipoPredicate = lic -> lic.getTipo() == DTOLicencia.getTipo();
+		boolean tieneOTuvoLicenciaDelMismoTipo = titularDTO.getLicenciaList().stream().anyMatch(licenciaDelMismoTipoPredicate);
+		
+		if(tieneOTuvoLicenciaDelMismoTipo) {
+			throw new EmitirLicenciaException("El titular ya posee la licencia. Si expiró, debe renovarla");
+		}
+		
+
+		
+		Licencia nuevaLicencia = new Licencia();
+		
+		nuevaLicencia.setTipo(tipo);
+		nuevaLicencia.setFechaOtor(DTOLicencia.getFechaOtor());
+		nuevaLicencia.setFechaVenc(DTOLicencia.getFechaVenc());
+		nuevaLicencia.setObservaciones(DTOLicencia.getObservaciones());
+		Titular titular = new Titular();
+		titular.setTipoDoc(DTOLicencia.getTitular().getTipoDoc());
+		titular.setNumeroDoc(DTOLicencia.getTitular().getNroDoc());
+		nuevaLicencia.setTitular(titular);
+		Tramite tramite = new Tramite();
+		tramite.setFechaReali(Calendar.getInstance().getTime());
+		Usuario usuario = GestorUsuario.obtenerUsuarioActual();
+		tramite.setUsuario(usuario);
+		nuevaLicencia.setTramite(tramite);
+		nuevaLicencia.getCosto();
+		
+		try {
+			DAOLicenciaJPA.getInstance().darDeAltaLicencia(nuevaLicencia);
+		}
+		catch(Exception e){
+			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
+		}
+			
+
 	}
 
 }

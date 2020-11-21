@@ -6,6 +6,7 @@
 package gestores;
 
 import dao.DAOTitularJPA;
+import dto.DTOTitular;
 import entidades.Titular;
 
 
@@ -33,10 +34,19 @@ public class GestorTitular {
 		return ret;
 	}
 	
-	public Titular obtenerTitular (String doc) {
+	public DTOTitular obtenerTitular (String doc) {
 		DAOTitularJPA daoTitular = new DAOTitularJPA();
-		Titular unTitular = daoTitular.obtenerTitular (doc);
-		return unTitular; 	
-	}
-	
+		Titular titular = daoTitular.obtenerTitular (doc);
+		DTOTitular titularDTO = new DTOTitular();
+		titularDTO.setApellido(titular.getApellido());
+		titularDTO.setNombre(titular.getNombre());
+		titularDTO.setTipoDoc(titular.getTipoDoc());
+		titularDTO.setNroDoc(titular.getNumeroDoc());
+		
+		
+		return titularDTO;
+		
+	}	
 }
+	
+	

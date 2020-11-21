@@ -321,7 +321,7 @@ public class UIAltaTitular {
 				if (completo) { //Si todos los campos se completaron
 					if(!gestorT.comprobarExistencia(tfNroDoc.getText())){ //Si no existe un titular registrado con ese Doc
 						lbEstado.setVisible(true);
-						dateFormat.format(dateCFechaNacimiento.getDate());
+						//dateFormat.format(dateCFechaNacimiento.getDate());
 						DTOT.setTipoDoc(comboTipoDoc.getSelectedItem().toString());
 						DTOT.setNroDoc(tfNroDoc.getText());
 						DTOT.setNombre(tfNombre.getText());
@@ -329,7 +329,7 @@ public class UIAltaTitular {
 						DTOT.setDireccion(tfDireccion.getText());
 						DTOT.setFactorS(tfFactor.getText());
 						DTOT.setGrupoS(tfGrupoSanguineo.getText());
-						DTOT.setFechaNac(dateFormat.toString());
+						DTOT.setFechaNac(dateCFechaNacimiento.getDate());
 						lbEstado.setText("Prodece a crear");
 					}
 					else{ //Si existe titular con ese doc
