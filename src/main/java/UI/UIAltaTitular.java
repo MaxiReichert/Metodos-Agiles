@@ -42,13 +42,13 @@ public class UIAltaTitular {
 	private JTextField tfGrupoSanguineo;
 	private JTextField tfFactor;
 	private ButtonGroup grupoDonador = new ButtonGroup();
-	DTOTitular DTOT = new DTOTitular();
+	DTOTitular dTOT = new DTOTitular();
 	GestorTitular gestorT = GestorTitular.getInstance();
 	SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -59,13 +59,14 @@ public class UIAltaTitular {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the application.
 	 */
 	public UIAltaTitular() {
 		initialize();
+		this.frmAltaCliente.setVisible(true);
 	}
 
 	/**
@@ -322,14 +323,14 @@ public class UIAltaTitular {
 					if(!gestorT.comprobarExistencia(tfNroDoc.getText())){ //Si no existe un titular registrado con ese Doc
 						lbEstado.setVisible(true);
 						//dateFormat.format(dateCFechaNacimiento.getDate());
-						DTOT.setTipoDoc(comboTipoDoc.getSelectedItem().toString());
-						DTOT.setNroDoc(tfNroDoc.getText());
-						DTOT.setNombre(tfNombre.getText());
-						DTOT.setApellido(tfApellido.getText());
-						DTOT.setDireccion(tfDireccion.getText());
-						DTOT.setFactorS(tfFactor.getText());
-						DTOT.setGrupoS(tfGrupoSanguineo.getText());
-						DTOT.setFechaNac(dateCFechaNacimiento.getDate());
+						dTOT.setTipoDoc(comboTipoDoc.getSelectedItem().toString());
+						dTOT.setNroDoc(tfNroDoc.getText());
+						dTOT.setNombre(tfNombre.getText());
+						dTOT.setApellido(tfApellido.getText());
+						dTOT.setDireccion(tfDireccion.getText());
+						dTOT.setFactorS(tfFactor.getText());
+						dTOT.setGrupoS(tfGrupoSanguineo.getText());
+						dTOT.setFechaNac(dateCFechaNacimiento.getDate());
 						lbEstado.setText("Prodece a crear");
 					}
 					else{ //Si existe titular con ese doc

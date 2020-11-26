@@ -5,7 +5,9 @@
  */
 package gestores;
 
+import dto.DTOUsuario;
 import entidades.Usuario;
+import exceptions.ExisteUsuarioException;
 
 /**
  *
@@ -18,4 +20,12 @@ public class GestorUsuario {
     	usuarioActual.setNumeroDoc("11111111");
     	return usuarioActual;
     }
+	
+	public void crearUsuario(DTOUsuario dtoUsuario) throws ExisteUsuarioException {
+		
+	}
+	
+	public boolean existeUsuario(String nroDoc) throws ExisteUsuarioException {
+		return false;
+	}
 }
