@@ -27,7 +27,7 @@ public class Usuario implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "numero_legajo")
-    private Integer numeroLegajo;
+    private String numeroLegajo;
     @Basic(optional = false)
     @Column(name = "tipo_doc")
     private String tipoDoc;
@@ -52,11 +52,11 @@ public class Usuario implements Serializable {
     }
 
 
-    public Integer getNumeroLegajo() {
+    public String getNumeroLegajo() {
         return numeroLegajo;
     }
 
-    public void setNumeroLegajo(Integer numeroLegajo) {
+    public void setNumeroLegajo(String numeroLegajo) {
         this.numeroLegajo = numeroLegajo;
     }
 

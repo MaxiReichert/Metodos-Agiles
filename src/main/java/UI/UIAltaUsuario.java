@@ -257,7 +257,7 @@ public class UIAltaUsuario {
 						existeUsuario= gestorUsuario.existeUsuario(tfNroDoc.getText());
 					}
 					//si se genera una excepcion muestro un mensaje
-					catch(ExisteUsuarioException e) {
+					catch(Exception e) {
 						lbEstado.setText("Hubo un problema con la base de datos");
 						lbEstado.setForeground(Color.red);
 						lbEstado.setVisible(true);
@@ -281,7 +281,7 @@ public class UIAltaUsuario {
 							lbEstado.setVisible(true);
 						}
 						//si se produce una excepcion muestro un mensaje
-						catch(ExisteUsuarioException e) {
+						catch(Exception e) {
 							lbEstado.setText("Hubo un problema con la base de datos");
 							lbEstado.setForeground(Color.red);
 							lbEstado.setVisible(true);

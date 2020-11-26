@@ -5,6 +5,8 @@
  */
 package gestores;
 
+import dao.DAOUsuario;
+import dao.DAOUsuarioJPA;
 import dto.DTOUsuario;
 import entidades.Usuario;
 import exceptions.ExisteUsuarioException;
@@ -21,11 +23,27 @@ public class GestorUsuario {
     	return usuarioActual;
     }
 	
-	public void crearUsuario(DTOUsuario dtoUsuario) throws ExisteUsuarioException {
-		
+	public void crearUsuario(DTOUsuario dtoUsuario) throws Exception {
+		DAOUsuario daoUsuario= new DAOUsuarioJPA();
+		Usuario usuario= new Usuario();
+		usuario.setApellido(dtoUsuario.getApellido());
+		usuario.setDireccion(dtoUsuario.getDireccion());
+		usuario.setFechaNac(dtoUsuario.getFechaNac());
+		usuario.setNombre(dtoUsuario.getNombre());
+		usuario.setNumeroDoc(dtoUsuario.getNroDoc());
+		usuario.setNumeroLegajo(dtoUsuario.getNroLegajo());
+		usuario.setTipoDoc(dtoUsuario.getTipoDoc());
+		daoUsuario.persistirUsuario(usuario);
 	}
 	
-	public boolean existeUsuario(String nroDoc) throws ExisteUsuarioException {
-		return false;
+	public boolean existeUsuario(String nroDoc) throws Exception {
+		boolean existe=true;
+		DAOUsuario daoUsuario= new DAOUsuarioJPA();
+		Usuario usuario;
+		usuario=daoUsuario.buscarPorDNI(nroDoc);
+		if(usuario==null) {
+			existe=false;
+		}
+		return existe;
 	}
 }
