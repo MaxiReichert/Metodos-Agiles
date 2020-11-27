@@ -31,19 +31,13 @@ public class GestorUsuario {
 		usuario.setFechaNac(dtoUsuario.getFechaNac());
 		usuario.setNombre(dtoUsuario.getNombre());
 		usuario.setNumeroDoc(dtoUsuario.getNroDoc());
-		usuario.setNumeroLegajo(dtoUsuario.getNroLegajo());
+		usuario.setNumeroLegajo(Integer.parseInt(dtoUsuario.getNroLegajo()));
 		usuario.setTipoDoc(dtoUsuario.getTipoDoc());
 		daoUsuario.persistirUsuario(usuario);
 	}
 	
 	public boolean existeUsuario(String nroDoc) throws Exception {
-		boolean existe=true;
 		DAOUsuario daoUsuario= new DAOUsuarioJPA();
-		Usuario usuario;
-		usuario=daoUsuario.buscarPorDNI(nroDoc);
-		if(usuario==null) {
-			existe=false;
-		}
-		return existe;
+		return daoUsuario.existeUsuario(nroDoc);
 	}
 }

@@ -10,10 +10,10 @@ public class DAOUsuarioJPA implements DAOUsuario {
 
 	//busca un usurio por su DNI
 	@Override
-	public Usuario buscarPorDNI(String dni) throws Exception {
+	public Usuario buscarPorDNI(String nroDoc) throws Exception {
 		EntityManager em= MyEntityManager.get();
-		Usuario result= (Usuario) em.createQuery("SELECT * FROM Usuario WHERE nroDoc= ?1")
-				.setParameter(1, dni)
+		Usuario result= (Usuario) em.createQuery("SELECT u FROM Usuario u WHERE u.numeroDoc= ?1")
+				.setParameter(1, nroDoc)
 				.getSingleResult();
 		em.close();
 		return result;
@@ -28,6 +28,16 @@ public class DAOUsuarioJPA implements DAOUsuario {
 		em.persist(u);
 		tx.commit();
 		em.close();
+	}
+
+	@Override
+	public boolean existeUsuario(String nroDoc) throws Exception {
+		EntityManager em= MyEntityManager.get();
+		long result= (long) em.createQuery("SELECT count(u) FROM Usuario u WHERE u.numeroDoc= ?1")
+				.setParameter(1, nroDoc)
+				.getSingleResult();
+		em.close();
+		return result != 0;
 	}
 
 }
