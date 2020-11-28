@@ -9,10 +9,10 @@
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="javax.persistence.jdbc.url" value="postgres://waidicwc:HLamTDJcfC0ag9Y9m6_ozi9h9qs_BIi6@tuffi.db.elephantsql.com:5432/waidicwc"/>
-      <property name="javax.persistence.jdbc.user" value="waidicwc"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/metodos_agiles"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="HLamTDJcfC0ag9Y9m6_ozi9h9qs_BIi6"></property>
+      <property name="javax.persistence.jdbc.password" value="123456"></property>
     </properties>
   </persistence-unit>
 </persistence>
