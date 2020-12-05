@@ -74,4 +74,22 @@ public class DAOUsuarioTest {
 		}
 	}
 	
+	@Test
+	public void actualizarUsuarioTest() {
+		DAOUsuario daoUsuario= new DAOUsuarioJPA();
+		Usuario usuario= new Usuario();
+		usuario.setApellido("Reichert");
+		usuario.setDireccion("Antonio Godoy 123");
+		usuario.setFechaNac(new Date("09/09/1999"));
+		usuario.setNombre("Marianela");
+		usuario.setNumeroDoc("15975312");
+		usuario.setNumeroLegajo(1345);
+		usuario.setTipoDoc("DNI");
+		try {
+			daoUsuario.actualizarUsuario(usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("No se pudo actualizar el usuario");
+		}
+	}
 }

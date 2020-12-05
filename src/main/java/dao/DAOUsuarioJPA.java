@@ -30,6 +30,7 @@ public class DAOUsuarioJPA implements DAOUsuario {
 		em.close();
 	}
 
+	//verifica la existencia de un usuario
 	@Override
 	public boolean existeUsuario(String nroDoc) throws Exception {
 		EntityManager em= MyEntityManager.get();
@@ -38,6 +39,17 @@ public class DAOUsuarioJPA implements DAOUsuario {
 				.getSingleResult();
 		em.close();
 		return result != 0;
+	}
+	
+	//actualiza un usuario
+	@Override
+	public void actualizarUsuario(Usuario u) throws Exception {
+		EntityManager em= MyEntityManager.get();
+		EntityTransaction tx= em.getTransaction();
+		tx.begin();
+		em.merge(u);
+		tx.commit();
+		em.close();
 	}
 
 }

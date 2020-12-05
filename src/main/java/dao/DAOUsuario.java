@@ -9,4 +9,6 @@ public interface DAOUsuario {
 	public void persistirUsuario(Usuario u) throws Exception;
 	
 	public boolean existeUsuario(String nroDoc) throws Exception;
+	
+	public void actualizarUsuario(Usuario u) throws Exception;
 }
