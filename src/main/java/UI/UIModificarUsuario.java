@@ -289,7 +289,7 @@ public class UIModificarUsuario {
 		
 		//boton actualizar
 		btnActualizar = new JButton("Actualizar");
-		btnActualizar.setBounds(660, 493, 89, 23);
+		btnActualizar.setBounds(660, 493, 92, 23);
 		btnActualizar.setEnabled(false);
 		btnActualizar.addActionListener(new ActionListener() {
 			
