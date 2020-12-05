@@ -16,13 +16,27 @@ import exceptions.ExisteUsuarioException;
  * @author Maxi
  */
 public class GestorUsuario {
+	/**
+	 * Metodo que obtiene el usuario correspondiente a este equipo
+	 * */
 	public static Usuario obtenerUsuarioActual(){
     	Usuario usuarioActual = new Usuario();
-    	usuarioActual.setTipoDoc("DNI");
-    	usuarioActual.setNumeroDoc("11111111");
+    	/*usuarioActual.setTipoDoc("DNI");
+    	usuarioActual.setNumeroDoc("11111111");*/
+    	DAOUsuario daoUsuario= new DAOUsuarioJPA();
+    	try {
+			usuarioActual=daoUsuario.buscarPorDNI("12345678");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return usuarioActual;
     }
 	
+	/**
+	 * Metodo que convierte un objeto de tipo DTOUsuario a Usuario y
+	 * llama a la dao para guardarlo en la BD
+	 * */
 	public void crearUsuario(DTOUsuario dtoUsuario) throws Exception {
 		DAOUsuario daoUsuario= new DAOUsuarioJPA();
 		Usuario usuario= new Usuario();
@@ -36,11 +50,17 @@ public class GestorUsuario {
 		daoUsuario.persistirUsuario(usuario);
 	}
 	
+	/**
+	 * Metodo que corrobora la existencia de un usuario
+	 * */
 	public boolean existeUsuario(String nroDoc) throws Exception {
 		DAOUsuario daoUsuario= new DAOUsuarioJPA();
 		return daoUsuario.existeUsuario(nroDoc);
 	}
 	
+	/**
+	 * Metodo que busca un usuario por su numeor de documento
+	 * */
 	public DTOUsuario buscarUsuario(String nroDoc) throws Exception{
 		DAOUsuario daoUsuario= new DAOUsuarioJPA();
 		DTOUsuario dtoUsuario= new DTOUsuario();
@@ -56,6 +76,10 @@ public class GestorUsuario {
 		return dtoUsuario;
 	}
 	
+	/**
+	 *Metodo que covierte un DTOUsuario en un Usuario y llama a la dao
+	 *para actualizar el registro de ese usuario en la BD
+	 * */
 	public void actualizarUsuario(DTOUsuario dtoUsuario) throws Exception{
 		DAOUsuario daoUsuario= new DAOUsuarioJPA();
 		Usuario usuario= new Usuario();
