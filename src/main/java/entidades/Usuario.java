@@ -47,6 +47,9 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "direccion")
     private String direccion;
+    @Basic(optional = false)
+    @Column(name = "administrador")
+    private boolean administrador;
 
     public Usuario() {
     }
@@ -107,5 +110,14 @@ public class Usuario implements Serializable {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+
+	public boolean isAdministrador() {
+		return administrador;
+	}
+
+	public void setAdministrador(boolean administrador) {
+		this.administrador = administrador;
+	}
+ 
     
 }
