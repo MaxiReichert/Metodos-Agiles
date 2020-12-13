@@ -110,7 +110,8 @@ public class UIEmitirLicencia {
 				if(txtNroDOC.getText().length()>3) {
 					DTOTitular titular = new DTOTitular();
 					try {
-						titular = new GestorTitular().obtenerTitular(txtNroDOC.getText());
+						GestorTitular gestorT = GestorTitular.getInstance();
+						titular = gestorT.obtenerTitular(nroDocTextField.getText());
 						if(titular!=null) {
 							titularSeleccionadoTextField.setText('['+titular.getTipoDoc()+"] " + titular.getNroDoc() + " - "+titular.getApellido()+", "+titular.getNombre());
 							titularSeleccionadoTextField.setForeground(Color.GREEN);

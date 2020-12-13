@@ -9,9 +9,9 @@ import persistencia.MyEntityManager;
 public class DAOTitularJPA implements DAOTitular{
 	@Override
 	public Titular obtenerTitular(String nro) {
-		int nroDoc = Integer.parseInt(nro);
+		
 		EntityManager em= MyEntityManager.get();
-		Titular result =(Titular) em.createQuery("SELECT * FROM titular where nroDoc = ?1")
+		Titular result =(Titular) em.createQuery("SELECT t FROM Titular t where t.numeroDoc = ?1")
 				.setParameter(1, nro)
 				.getSingleResult();
 		em.close();

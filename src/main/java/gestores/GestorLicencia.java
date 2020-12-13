@@ -32,6 +32,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import dao.DAOLicenciaJPA;
+import dao.DAOTitularJPA;
 import dto.DTOLicencia;
 import dto.DTOTitular;
 import entidades.Licencia;
@@ -45,7 +46,31 @@ import exceptions.EmitirLicenciaException;
  * @author Maxi
  */
 public class GestorLicencia {
-    
+	//modificacion Friggeri
+	private static GestorLicencia GLicencia ; // Patron Singleton -- Unica instancia tipo gestor creada.
+
+	private GestorLicencia(){ // Patron Singleton -- Constructor privatizado para no permitir su uso.
+	}
+
+	public static GestorLicencia getInstance() { // Patron Singleton -- Devuelve la instancia, si no existe la crea
+		if ( GLicencia == null) {
+			GLicencia = new GestorLicencia();
+		}
+		return GLicencia;
+	}
+	
+	public DTOLicencia obtenerLicencia (String doc) {
+		DAOLicenciaJPA daoLicencia = new DAOLicenciaJPA();
+		Licencia licencia = daoLicencia.obtenerLicencia (doc);
+		DTOLicencia licenciaDTO = new DTOLicencia();
+		licenciaDTO.setFechaVenc(licencia.getFechaVenc());
+		licenciaDTO.setTipo(licencia.getTipo());
+		licenciaDTO.setObservaciones(licencia.getObservaciones());
+		
+		return licenciaDTO;
+		
+	}
+    //fin Friggeri
 	private final static long SECONDS_IN_YEAR = 31536000;
 
 	public void ImprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{

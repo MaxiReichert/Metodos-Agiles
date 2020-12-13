@@ -17,8 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import dto.DTOLicencia;
 import dto.DTOTitular;
 import enumeradores.tipoDocumento;
+import gestores.GestorLicencia;
 import gestores.GestorTitular;
 
 public class UIRenovarLicencia {
@@ -98,14 +100,14 @@ public class UIRenovarLicencia {
 		frmRenovarLicencia.getContentPane().add(tfNroDoc);
 		
 		tfFechaVencimiento =new JTextField();
-		tfFechaVencimiento.setBounds(220, 70, 181, 20);
+		tfFechaVencimiento.setBounds(220, 110, 181, 20);
 		tfFechaVencimiento.setColumns(10);
 		tfFechaVencimiento.setText("Prueba fecha vencimiento"); //traer de la bd
 		tfFechaVencimiento.setEditable(false);
 		frmRenovarLicencia.getContentPane().add(tfFechaVencimiento);
 		
 		tfNombre = new JTextField();
-		tfNombre.setBounds(220, 110, 181, 20);
+		tfNombre.setBounds(220, 150, 181, 20);
 		tfNombre.setColumns(10);
 		tfNombre.setText("Prueba Nombre"); //traer de la bd
 		tfNombre.addKeyListener(new KeyAdapter() { //El nombre tiene hasta 15 letras
@@ -125,7 +127,7 @@ public class UIRenovarLicencia {
 		frmRenovarLicencia.getContentPane().add(tfNombre);
 		
 		tfApellido = new JTextField();
-		tfApellido.setBounds(220, 150, 181, 20);
+		tfApellido.setBounds(220, 190, 181, 20);
 		tfApellido.setColumns(10);
 		tfApellido.setText("Prueba Apellido"); //traer de la bd
 		tfApellido.addKeyListener(new KeyAdapter() { //El apellido tiene hasta 15 letras
@@ -145,7 +147,7 @@ public class UIRenovarLicencia {
 		frmRenovarLicencia.getContentPane().add(tfApellido);
 
 		tfDireccion = new JTextField();
-		tfDireccion.setBounds(220, 190, 181, 20);
+		tfDireccion.setBounds(220, 230, 181, 20);
 		tfDireccion.setColumns(10);
 		tfDireccion.setText("Prueba direccion"); //traer el valor de la bd
 		tfDireccion.addKeyListener(new KeyAdapter() { //La direccion tiene hasta 30 letras
@@ -160,27 +162,28 @@ public class UIRenovarLicencia {
 		frmRenovarLicencia.getContentPane().add(tfDireccion);
 		
 		tfFechaNacimiento = new JTextField();
-		tfFechaNacimiento.setBounds(220, 230, 181, 20);
+		tfFechaNacimiento.setBounds(220, 270, 181, 20);
 		tfFechaNacimiento.setText("Prueba fecha nacimiento"); //traer de la bd
 		tfFechaNacimiento.setEditable(false);
 		frmRenovarLicencia.getContentPane().add(tfFechaNacimiento);
 
 		
 		tfGrupoSanguineo = new JTextField();
-		tfGrupoSanguineo.setBounds(220, 270, 181, 20);
+		tfGrupoSanguineo.setBounds(220, 310, 181, 20);
 		tfGrupoSanguineo.setText("Prueba grupo sanguineo"); //traer de la bd
 		tfGrupoSanguineo.setEditable(false);
 		frmRenovarLicencia.getContentPane().add(tfGrupoSanguineo);
 		
 		tfFactor = new JTextField();
 		tfFactor.setColumns(10);
-		tfFactor.setBounds(220, 310, 181, 20);
+		tfFactor.setBounds(220, 350, 181, 20);
 		tfFactor.setText("Prueba factor"); //traer de la bd
 		tfFactor.setEditable(false);
 		frmRenovarLicencia.getContentPane().add(tfFactor);
 		
-		tfClaseLicencia =new JTextField();
-		tfClaseLicencia.setBounds(220, 350, 181, 20);
+		
+		tfClaseLicencia =new JTextField();//cambiar por combobox
+		tfClaseLicencia.setBounds(220, 70, 181, 20);
 		tfClaseLicencia.setColumns(10);
 		tfClaseLicencia.setText("Prueba clase licencia"); //traer de la bd
 		tfClaseLicencia.setEditable(false);
@@ -201,99 +204,124 @@ public class UIRenovarLicencia {
 		lbNroDoc.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbNroDoc);
 		
-		JLabel lbEstadoTitular = new JLabel("Prueba se encontro o no");
-		lbEstadoTitular.setBounds(450, 35, 450, 25);
+		JLabel lbEstadoTitular = new JLabel("Prueba se encontro titular o no");
+		lbEstadoTitular.setBounds(489, 35, 450, 25);
+		lbEstadoTitular.setFont(new Font("Serif", Font.BOLD, 15));
 		frmRenovarLicencia.getContentPane().add(lbEstadoTitular);	
 		//hacer un if, si se encontro el titular mostrar
 		
+		JLabel lbEstadoLicencia = new JLabel("Prueba se encontro licencia o no");
+		lbEstadoLicencia.setBounds(220, 35, 279, 25);
+		lbEstadoLicencia.setFont(new Font("Serif", Font.BOLD, 15));
+		frmRenovarLicencia.getContentPane().add(lbEstadoLicencia);	
+
 		JLabel lbFechaVencimiento = new JLabel("Fecha de vencimiento");
-		lbFechaVencimiento.setBounds(25, 70, 153, 22);
+		lbFechaVencimiento.setBounds(25, 110, 153, 22);
 		lbFechaVencimiento.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbFechaVencimiento);
 		
 		
 		JLabel lbNombre = new JLabel("Nombre");
-		lbNombre.setBounds(25, 110, 151, 22);
+		lbNombre.setBounds(25, 150, 151, 22);
 		lbNombre.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbNombre);
 		
 		
 		JLabel lbApellido = new JLabel("Apellido");
-		lbApellido.setBounds(25, 150, 151, 22);
+		lbApellido.setBounds(25, 190, 151, 22);
 		lbApellido.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbApellido);
 		
 		JLabel lbFechaNac = new JLabel("Fecha de nacimiento");
-		lbFechaNac.setBounds (25, 230, 151, 22);
+		lbFechaNac.setBounds (25, 270, 151, 22);
 		lbFechaNac.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbFechaNac);
 		
 		JLabel lbDireccion = new JLabel("Direccion");
-		lbDireccion.setBounds (25, 190, 124, 22);
+		lbDireccion.setBounds (25, 230, 124, 22);
 		lbDireccion.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbDireccion);
 		
 		JLabel lbClaseSolicitada = new JLabel("Clase de Licencia");
-		lbClaseSolicitada.setBounds (25, 350, 151, 22);
+		lbClaseSolicitada.setBounds (25, 70, 151, 22);
 		lbClaseSolicitada.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbClaseSolicitada);
 		
 		JLabel lbFactorSanguineo = new JLabel("Factor sanguineo");
-		lbFactorSanguineo.setBounds (25, 310, 140, 22);
+		lbFactorSanguineo.setBounds (25, 350, 140, 22);
 		lbFactorSanguineo.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbFactorSanguineo);
 	
 		JLabel lbGrupoSanguineo = new JLabel("Grupo sanguineo");
-		lbGrupoSanguineo.setBounds (25, 270, 151, 22);
+		lbGrupoSanguineo.setBounds (25, 310, 151, 22);
 		lbGrupoSanguineo.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbGrupoSanguineo);
 		
 		JLabel lbDonante = new JLabel("Donante de organos:");
-		lbDonante.setBounds(25, 409, 174, 22);
+		lbDonante.setBounds(25, 390, 174, 22);
 		lbDonante.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmRenovarLicencia.getContentPane().add(lbDonante);
 		
 		JRadioButton rbDonanteNo = new JRadioButton("No");
-		rbDonanteNo.setBounds(23, 438, 64, 23);
+		rbDonanteNo.setBounds(220, 390, 64, 23);
 		rbDonanteNo.setSelected(true);//traer la selección de la base de datos
 		grupoDonador.add(rbDonanteNo);
 		frmRenovarLicencia.getContentPane().add(rbDonanteNo);
 		
 		JRadioButton rbDonanteSi = new JRadioButton("Si");
-		rbDonanteSi.setBounds(173, 438, 57, 23);
+		rbDonanteSi.setBounds(284, 390, 57, 23);
 		grupoDonador.add(rbDonanteSi);
 		frmRenovarLicencia.getContentPane().add(rbDonanteSi);
+		
 		
 		//-------------BOTONES------------//
 		
 		JButton btnBuscarTitular = new JButton("Buscar");
 		btnBuscarTitular.setBounds(675, 14, 89, 19);
 		frmRenovarLicencia.getContentPane().add(btnBuscarTitular);
-		/*btnBuscarTitular.addMouseListener(new MouseAdapter() {
+		btnBuscarTitular.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(tfNroDoc.getText().length()>3) {
 					DTOTitular titular = new DTOTitular();
-					try {			
+					try {
 						GestorTitular gestorT = GestorTitular.getInstance();
-						titular = gestorT.obtenerTitular(tfNroDoc.getText());
+						titular = gestorT.obtenerTitularCompleto(tfNroDoc.getText());
 						if(titular!=null) {
-							titularSeleccionadoTextField.setText('['+titular.getTipoDoc()+"] " + titular.getNroDoc() + " - "+titular.getApellido()+", "+titular.getNombre());
-							titularSeleccionadoTextField.setForeground(Color.GREEN);
+							lbEstadoTitular.setText('['+titular.getTipoDoc()+"] " + titular.getNroDoc() + " - "+titular.getApellido()+", "+titular.getNombre());
+							lbEstadoTitular.setForeground(Color.GREEN);
+							tfNombre.setText(titular.getNombre());
+							tfApellido.setText(titular.getApellido());
+							tfDireccion.setText(titular.getDireccion());
+							tfFechaNacimiento.setText(""+(titular.getFechaNac()));
+							tfGrupoSanguineo.setText(titular.getGrupoS());
+							tfFactor.setText(titular.getFactorS());
+							if(titular.getDonador()) {
+								rbDonanteSi.setSelected(true);
+							}
+							else {
+								rbDonanteNo.setSelected(true);
+							}
+							//buscar licencia
+							DTOLicencia licencia = new DTOLicencia();
+							licencia.setTitular(titular);
+							GestorLicencia gestorL = GestorLicencia.getInstance();
+							gestorL.obtenerLicencia("Hola");
+							
 						}
 						else {
-							titularSeleccionadoTextField.setText("TITULAR NO ENCONTRADO");
-							titularSeleccionadoTextField.setForeground(Color.RED);
+							lbEstadoTitular.setText("TITULAR NO ENCONTRADO");
+							lbEstadoTitular.setForeground(Color.RED);
 						}
 					} catch (Exception ex){
-						titularSeleccionadoTextField.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
-						titularSeleccionadoTextField.setForeground(Color.RED);
+						lbEstadoTitular.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
+						lbEstadoTitular.setForeground(Color.RED);
 						System.err.println(ex.getMessage());
 					}
 					
 				}
 			}
-		});*/
+		});
 	}
 	
 	

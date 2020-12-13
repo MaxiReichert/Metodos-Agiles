@@ -47,6 +47,24 @@ public class GestorTitular {
 		return titularDTO;
 		
 	}	
+	
+	public DTOTitular obtenerTitularCompleto (String doc) {
+		DAOTitularJPA daoTitular = new DAOTitularJPA();
+		Titular titular = daoTitular.obtenerTitular (doc);
+		DTOTitular titularDTO = new DTOTitular();
+		titularDTO.setApellido(titular.getApellido());
+		titularDTO.setNombre(titular.getNombre());
+		titularDTO.setTipoDoc(titular.getTipoDoc());
+		titularDTO.setNroDoc(titular.getNumeroDoc());
+		titularDTO.setDireccion(titular.getDireccion());
+		titularDTO.setFechaNac(titular.getFechaNac());
+		titularDTO.setGrupoS(titular.getGrupoSanguineo());
+		titularDTO.setFactorS(titular.getFactor());
+		titularDTO.setDonador(titular.getDonante());
+		
+		return titularDTO;
+		
+	}	
 }
 	
 	

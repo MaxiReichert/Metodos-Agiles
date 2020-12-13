@@ -57,10 +57,10 @@ public class Licencia implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
     @ManyToOne(optional= false)
-    @JoinColumn(name="numero_doc")
+    @JoinColumn(name="titular")
     private Titular titular;
     @OneToOne(optional = false)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "tramite")
     private Tramite tramite;
 
     public Licencia() {
