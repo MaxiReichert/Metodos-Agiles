@@ -45,7 +45,7 @@ public class Tramite implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaReali;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "numero_legajo")
+    @JoinColumn(name = "usuario")
     private Usuario usuario;
 
     public Tramite() {

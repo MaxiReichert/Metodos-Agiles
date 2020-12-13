@@ -1,8 +1,11 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import dto.DTOTitular;
 import entidades.Licencia;
 import entidades.Titular;
 import exceptions.EmitirLicenciaException;
@@ -20,12 +23,12 @@ private static DAOLicenciaJPA instance = null;
 	}
 	
 	@Override
-	public Licencia obtenerLicencia(String nro) {
+	public List<Licencia> obtenerLicencia(String nro) {
 		
 		EntityManager em= MyEntityManager.get();
-		Licencia result =(Licencia) em.createQuery("SELECT l FROM Licencia l where l.titular.numeroDoc = ?1")
+		List<Licencia> result =(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.titular.numeroDoc = ?1")
 				.setParameter(1, nro)
-				.getSingleResult();
+				.getResultList();
 		em.close();
 		return result;
 	}	

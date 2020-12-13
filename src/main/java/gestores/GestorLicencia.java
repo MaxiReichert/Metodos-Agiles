@@ -9,9 +9,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 
 import com.itextpdf.text.BaseColor;
@@ -59,15 +61,23 @@ public class GestorLicencia {
 		return GLicencia;
 	}
 	
-	public DTOLicencia obtenerLicencia (String doc) {
+	public void obtenerLicencia (String doc, DTOTitular titular) {
 		DAOLicenciaJPA daoLicencia = new DAOLicenciaJPA();
-		Licencia licencia = daoLicencia.obtenerLicencia (doc);
-		DTOLicencia licenciaDTO = new DTOLicencia();
-		licenciaDTO.setFechaVenc(licencia.getFechaVenc());
-		licenciaDTO.setTipo(licencia.getTipo());
-		licenciaDTO.setObservaciones(licencia.getObservaciones());
+		DTOLicencia dtoLicencia = new DTOLicencia();
+		List<DTOLicencia> dtoLicenciaList = new ArrayList<DTOLicencia>();
+		List<Licencia> licenciaList = daoLicencia.obtenerLicencia (doc);
 		
-		return licenciaDTO;
+		for(int i=0;i<licenciaList.size();i++) {
+			dtoLicencia = new DTOLicencia();
+			dtoLicencia.setCosto(licenciaList.get(i).getCosto());
+			dtoLicencia.setFechaOtor(licenciaList.get(i).getFechaOtor());
+			dtoLicencia.setFechaVenc(licenciaList.get(i).getFechaOtor());
+			dtoLicencia.setObservaciones(licenciaList.get(i).getObservaciones());
+			dtoLicencia.setTipo(licenciaList.get(i).getTipo());
+			dtoLicenciaList.add(dtoLicencia);
+		}
+		titular.setLicenciaList(dtoLicenciaList);
+		
 		
 	}
     //fin Friggeri
