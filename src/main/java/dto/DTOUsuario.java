@@ -11,6 +11,7 @@ public class DTOUsuario {
 	private String tipoDoc;
 	private Date fechaNac;
 	private String nroLegajo;
+	private boolean administrador;
 	
 	
 	public DTOUsuario() {
@@ -100,6 +101,21 @@ public class DTOUsuario {
 	public void setNroLegajo(String nroLegajo) {
 		this.nroLegajo = nroLegajo;
 	}
+
+	/**
+	 * @return the administrador
+	 */
+	public boolean isAdministrador() {
+		return administrador;
+	}
+
+	/**
+	 * @param administrador the administrador to set
+	 */
+	public void setAdministrador(boolean administrador) {
+		this.administrador = administrador;
+	}
+	
 	
 	
 }
