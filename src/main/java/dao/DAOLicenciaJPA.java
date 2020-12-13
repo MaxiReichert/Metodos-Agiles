@@ -3,7 +3,10 @@ package dao;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import org.hibernate.Session;
+
 import entidades.Licencia;
+import entidades.Titular;
 import exceptions.EmitirLicenciaException;
 import persistencia.MyEntityManager;
 
@@ -19,10 +22,48 @@ private static DAOLicenciaJPA instance = null;
 	}
 
 	@Override
-	public void darDeAltaLicencia(Licencia licencia) throws EmitirLicenciaException {
+	public Licencia darDeAltaLicencia(Licencia licencia, String nroDocTitular) throws EmitirLicenciaException {
 		EntityManager em = MyEntityManager.get();
-		em.persist(licencia);
-		return;
+		
+		EntityTransaction tx = null;
+		
+		tx = em.getTransaction();
+		try {
+			
+			
+			tx.begin();
+			
+			em.persist(licencia);
+			em.flush();
+			
+			Titular titular = null;
+			try {
+				titular = DAOTitularJPA.getInstance().obtenerTitular(nroDocTitular);
+			}
+			catch(Exception e) {
+				throw new EmitirLicenciaException("Error al recuperar el titular desde la base de datos. Si el problema persiste, contacte al administrador del sistema");
+			}
+			
+			titular.getLicenciaList().add(licencia);
+			em.merge(titular);
+			licencia.setTitular(titular);
+			
+			licencia.setFechaVenc(licencia.calcularVenc());
+			licencia.setCosto(licencia.calcularCosto().intValue());
+			
+			em.merge(licencia);
+			
+			tx.commit();
+		}
+		catch(Exception e) {
+			tx.rollback();
+			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos.");
+		}
+		finally {
+			em.close();
+		}
+		
+		return licencia;
 	}
 	
 	@Override

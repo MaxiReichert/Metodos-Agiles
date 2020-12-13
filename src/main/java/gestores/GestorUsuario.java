@@ -47,6 +47,7 @@ public class GestorUsuario {
 		usuario.setNumeroDoc(dtoUsuario.getNroDoc());
 		usuario.setNumeroLegajo(Integer.parseInt(dtoUsuario.getNroLegajo()));
 		usuario.setTipoDoc(dtoUsuario.getTipoDoc());
+		usuario.setAdministrador(false);
 		daoUsuario.persistirUsuario(usuario);
 	}
 	
@@ -90,6 +91,7 @@ public class GestorUsuario {
 		usuario.setNumeroDoc(dtoUsuario.getNroDoc());
 		usuario.setNumeroLegajo(Integer.parseInt(dtoUsuario.getNroLegajo()));
 		usuario.setTipoDoc(dtoUsuario.getTipoDoc());
+		usuario.setAdministrador(false);
 		daoUsuario.actualizarUsuario(usuario);
 		
 	}

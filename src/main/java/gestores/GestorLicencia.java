@@ -32,6 +32,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import dao.DAOLicenciaJPA;
+import dao.DAOTitularJPA;
 import dto.DTOLicencia;
 import dto.DTOTitular;
 import entidades.Licencia;
@@ -529,30 +530,29 @@ public class GestorLicencia {
 		}
 		
 
-		
 		Licencia nuevaLicencia = new Licencia();
 		
 		nuevaLicencia.setTipo(tipo);
-		nuevaLicencia.setFechaOtor(DTOLicencia.getFechaOtor());
-		nuevaLicencia.setFechaVenc(DTOLicencia.getFechaVenc());
+		nuevaLicencia.setFechaOtor(Calendar.getInstance().getTime());
+		
 		nuevaLicencia.setObservaciones(DTOLicencia.getObservaciones());
-		Titular titular = new Titular();
-		titular.setTipoDoc(DTOLicencia.getTitular().getTipoDoc());
-		titular.setNumeroDoc(DTOLicencia.getTitular().getNroDoc());
-		nuevaLicencia.setTitular(titular);
 		Tramite tramite = new Tramite();
 		tramite.setFechaReali(Calendar.getInstance().getTime());
 		Usuario usuario = GestorUsuario.obtenerUsuarioActual();
-		tramite.setUsuario(usuario);
 		nuevaLicencia.setTramite(tramite);
-		nuevaLicencia.getCosto();
+		tramite.setUsuario(usuario);
+		
+		
 		
 		try {
-			DAOLicenciaJPA.getInstance().darDeAltaLicencia(nuevaLicencia);
+			nuevaLicencia = DAOLicenciaJPA.getInstance().darDeAltaLicencia(nuevaLicencia, DTOLicencia.getTitular().getNroDoc());
 		}
 		catch(Exception e){
 			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
 		}
+		
+		
+		
 			
 
 	}
