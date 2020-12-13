@@ -161,6 +161,58 @@ public class Licencia implements Serializable {
         }
         return true;
     }
+    
+    public Integer calcularCosto() {
+        Integer costo = 8;
+        Integer periodo = this.fechaVenc.getYear() - this.fechaOtor.getYear();
+        System.out.format("");
+        switch (this.tipo) {
+            case "A":
+                if (periodo >= 5) costo += 40;
+                else if (periodo >= 4) costo += 30;
+                else if (periodo >= 3) costo += 25;
+                else costo += 20;
+                return costo;
+            case "B":
+                if (periodo >= 5) costo += 40;
+                else if (periodo >= 4) costo += 30;
+                else if (periodo >= 3) costo += 25;
+                else costo += 20;
+                return costo;
+            case "C":
+                if (periodo >= 5) costo += 47;
+                else if (periodo >= 4) costo += 35;
+                else if (periodo >= 3) costo += 30;
+                else costo += 23;
+                return costo;
+            case "D":
+                if (periodo >= 5) costo += 59;
+                else if (periodo >= 4) costo += 44;
+                else if (periodo >= 3) costo += 39;
+                else costo += 29;
+                return costo;
+            case "E":
+                if (periodo >= 5) costo += 59;
+                else if (periodo >= 4) costo += 44;
+                else if (periodo >= 3) costo += 39;
+                else costo += 29;
+                return costo;
+            case "F":
+                if (periodo >= 5) costo += 59;
+                else if (periodo >= 4) costo += 44;
+                else if (periodo >= 3) costo += 39;
+                else costo += 29;
+                return costo;
+            case "G":
+                if (periodo >= 5) costo += 40;
+                else if (periodo >= 4) costo += 30;
+                else if (periodo >= 3) costo += 25;
+                else costo += 20;
+                return costo;
+            default:
+                return 0;
+        }
+    }
 
     @Override
     public String toString() {
