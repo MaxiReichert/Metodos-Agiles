@@ -28,7 +28,7 @@ PRIMARY KEY(numero_legajo));
 create table tramite(
 id SERIAL NOT NULL,
 fecha_reali DATE NOT NULL,
-usuario VARCHAR(10) NOT NULL,
+usuario INTEGER NOT NULL,
 PRIMARY KEY(id),
 FOREIGN KEY(usuario) REFERENCES usuario(numero_legajo));
 

@@ -48,9 +48,6 @@ public class Titular implements Serializable {
     @Column(name = "direccion")
     private String direccion;
     @Basic(optional = false)
-    @Column(name = "tipo_lic_solicitada")
-    private String tipoLicSolicitada;
-    @Basic(optional = false)
     @Column(name = "grupo_sanguineo")
     private String grupoSanguineo;
     @Basic(optional = false)
