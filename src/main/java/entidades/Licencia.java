@@ -6,6 +6,7 @@
 package entidades;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -61,10 +62,10 @@ public class Licencia implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
     @ManyToOne(optional= false)
-    @JoinColumn(name="numero_doc")
+    @JoinColumn(name="titular")
     private Titular titular;
     @OneToOne(optional = false)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "tramite")
     private Tramite tramite;
 
     public Licencia() {
@@ -231,7 +232,7 @@ public class Licencia implements Serializable {
  public Date calcularVigencia()
  {
 	LocalDate fechaVigencia;
-	LocalDate fechaNac = this.titular.getFechaNac().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	LocalDate fechaNac = Instant.ofEpochMilli(this.titular.getFechaNac().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 	DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
  	LocalDate fechaActual = LocalDate.now();
  	int edad=Period.between(fechaNac , fechaActual).getYears();

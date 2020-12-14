@@ -84,12 +84,7 @@ public class UIAltaTitular {
 		comboTipoDoc.setBounds(146, 13, 180, 22);
 		comboTipoDoc.setModel(new DefaultComboBoxModel(tipoDocumento.values()));
 		frmAltaCliente.getContentPane().add(comboTipoDoc);
-		
-		final JComboBox comboClaseSolicitada = new JComboBox();
-		comboClaseSolicitada.setBounds(220, 310, 181, 22);
-		comboClaseSolicitada.setModel(new DefaultComboBoxModel(tipoLicencia.values()));
-		frmAltaCliente.getContentPane().add(comboClaseSolicitada);
-		
+	
 		
 		
 		//----------TEXTFIELD----------//
@@ -312,9 +307,6 @@ public class UIAltaTitular {
 				if (comboTipoDoc.getSelectedIndex() == 0){
 					completo = false;
 				};
-				if (comboClaseSolicitada.getSelectedIndex() == 0){
-					completo = false;
-				};
 				//ComprobarFecha
 				if (dateCFechaNacimiento.getDate() == null) {
 					completo = false;
@@ -332,8 +324,15 @@ public class UIAltaTitular {
 						dTOT.setGrupoS(tfGrupoSanguineo.getText());
 						dTOT.setFechaNac(dateCFechaNacimiento.getDate());
 						lbEstado.setText("Prodece a crear");
-						gestorT.darDeAltaTitular(dTOT);
-						lbEstado.setText("Titular creado");
+						try {
+							gestorT.darDeAltaTitular(dTOT);
+							lbEstado.setText("Titular creado");
+						}
+						catch(Exception ex){
+							lbEstado.setText("Error al guardar el titular");
+						}
+						
+						
 					}
 					else{ //Si existe titular con ese doc
 						lbEstado.setVisible(true);

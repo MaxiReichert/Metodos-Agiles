@@ -7,8 +7,11 @@ package gestores;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import dao.DAOTitular;
 import dao.DAOTitularJPA;
+import dto.DTOLicencia;
 import dto.DTOTitular;
 import entidades.Licencia;
 import entidades.Titular;
@@ -43,17 +46,37 @@ public class GestorTitular {
 		Titular titular = daoTitular.obtenerTitular (doc);
 		DTOTitular titularDTO = new DTOTitular();
 		titularDTO.setApellido(titular.getApellido());
+		titularDTO.setDireccion(titular.getDireccion());
+		titularDTO.setDonador(titular.getDonante());
+		titularDTO.setFactorS(titular.getFactor());
+		titularDTO.setFechaNac(titular.getFechaNac());
+		titularDTO.setGrupoS(titular.getGrupoSanguineo());
+		titularDTO.setLicenciaList(
+					titular.getLicenciaList()
+					.stream()
+					.map((Licencia lic) -> {
+						DTOLicencia dtoLicAux = new DTOLicencia();
+						dtoLicAux.setCosto(lic.getCosto());
+						dtoLicAux.setFechaOtor(lic.getFechaOtor());
+						dtoLicAux.setFechaVenc(lic.getFechaVenc());
+						dtoLicAux.setObservaciones(lic.getObservaciones());
+						dtoLicAux.setTipo(lic.getTipo());
+						dtoLicAux.setTitular(titularDTO);
+						return dtoLicAux;
+					}).collect(Collectors.toList()));	
+				
 		titularDTO.setNombre(titular.getNombre());
 		titularDTO.setTipoDoc(titular.getTipoDoc());
 		titularDTO.setNroDoc(titular.getNumeroDoc());
+		
 		
 		
 		return titularDTO;
 		
 	}	
 	
-	public void darDeAltaTitular(DTOTitular titularDto) {
-		DAOTitularJPA daoTitular = new DAOTitularJPA();
+	public void darDeAltaTitular(DTOTitular titularDto) throws Exception {
+		DAOTitular daoTitular = DAOTitularJPA.getInstance();
 		Titular titular = new Titular();
 		titular.setApellido(titularDto.getApellido());
 		titular.setDireccion(titularDto.getDireccion());
@@ -66,7 +89,14 @@ public class GestorTitular {
 		titular.setNombre(titularDto.getNombre());
 		titular.setNumeroDoc(titularDto.getNroDoc());
 		titular.setTipoDoc(titularDto.getTipoDoc());
-		daoTitular.persistirTitular(titular);
+		try {
+			daoTitular.persistirTitular(titular);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new Exception("Error al guardar el titular");
+			
+		}
 		
 	}
 }

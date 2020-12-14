@@ -539,8 +539,10 @@ public class GestorLicencia {
 		Tramite tramite = new Tramite();
 		tramite.setFechaReali(Calendar.getInstance().getTime());
 		Usuario usuario = GestorUsuario.obtenerUsuarioActual();
-		nuevaLicencia.setTramite(tramite);
 		tramite.setUsuario(usuario);
+		nuevaLicencia.setTramite(tramite);
+		
+		
 
 		
 		

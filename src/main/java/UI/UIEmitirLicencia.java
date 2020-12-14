@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 import com.toedter.calendar.JDateChooser;
 
 import dto.DTOTitular;
+import enumeradores.tipoDocumento;
 import exceptions.EmitirLicenciaException;
 import gestores.GestorLicencia;
 import gestores.GestorTitular;
@@ -75,7 +76,7 @@ public class UIEmitirLicencia {
 		frmAltaLicencia.getContentPane().setLayout(null);
 		
 		JComboBox<String> comboTipoDNI = new JComboBox<String>();
-		comboTipoDNI.setModel(new DefaultComboBoxModel<String>(new String[] {"DNI"}));
+		comboTipoDNI.setModel(new DefaultComboBoxModel(tipoDocumento.values()));
 		comboTipoDNI.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		comboTipoDNI.setBounds(97, 79, 164, 35);
 		frmAltaLicencia.getContentPane().add(comboTipoDNI);
@@ -209,6 +210,7 @@ public class UIEmitirLicencia {
 		DTOLicencia dto = new DTOLicencia();
 		
 		if(dtoTitularSeleccionado != null) {
+			System.out.println(dtoTitularSeleccionado.getApellido());
 			dto.setTitular(dtoTitularSeleccionado);
 		}else {
 			throw new EmitirLicenciaException("No se ha seleccionado un titular");

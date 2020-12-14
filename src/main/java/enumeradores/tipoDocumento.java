@@ -1,5 +1,5 @@
 package enumeradores;
 
 public enum tipoDocumento {
-	SELECCIONE_TIPO_DOC,DNI,LC,LE,PASAPORTE;
+	SELECCIONE,DNI,LC,LE,PASAPORTE;
 }

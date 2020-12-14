@@ -25,7 +25,7 @@ public class GestorUsuario {
     	usuarioActual.setNumeroDoc("11111111");*/
     	DAOUsuario daoUsuario= new DAOUsuarioJPA();
     	try {
-			usuarioActual=daoUsuario.buscarPorDNI("12345678");
+			usuarioActual=daoUsuario.buscarPorDNI("13245678");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
