@@ -38,7 +38,12 @@ private static DAOLicenciaJPA instance = null;
 	@Override
 	public void darDeAltaLicencia(Licencia licencia) throws EmitirLicenciaException {
 		EntityManager em = MyEntityManager.get();
+		EntityTransaction tx= em.getTransaction();
+		tx.begin();
+		em.persist(licencia.getTramite());
 		em.persist(licencia);
+		tx.commit();
+		em.close();
 		return;
 	}
 	
@@ -77,7 +82,7 @@ private static DAOLicenciaJPA instance = null;
 	@Override
 	public Tramite buscarTramite(int idTramite) throws Exception {
 		EntityManager em= MyEntityManager.get();
-		Tramite result= (Tramite) em.createQuery("SELECT t FROM tramite t WHERE t.id= ?1")
+		Tramite result= (Tramite) em.createQuery("SELECT t FROM Tramite t WHERE t.id= ?1")
 				.setParameter(1, idTramite)
 				.getSingleResult();
 		return result;

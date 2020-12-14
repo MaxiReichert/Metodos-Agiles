@@ -407,6 +407,7 @@ public class UIRenovarLicencia {
 				};
 				
 				if (completo) { //Si todos los campos se completaron
+					licencia.setTitular(titular);
 					GestorLicencia gestorL= GestorLicencia.getInstance();
 					try {
 						gestorL.renovarLicencia(licencia);

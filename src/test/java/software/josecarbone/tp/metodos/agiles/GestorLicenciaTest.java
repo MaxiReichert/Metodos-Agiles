@@ -28,7 +28,7 @@ public class GestorLicenciaTest {
 		dtoLicencia.setTipo("B");
 		
 		try {
-			gestorLicencia.ImprimirTicket(dtoTitular, dtoLicencia);
+			gestorLicencia.imprimirTicket(dtoTitular, dtoLicencia);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			fail("La prueba ha fallado");
@@ -59,7 +59,7 @@ public class GestorLicenciaTest {
 		dtoLicencia.setObservaciones("Utiliza anteojos para conducir");
 		dtoLicencia.setTipo("G");
 		try {
-			gestor.ImprimirLicencia(dtoTitular, dtoLicencia);
+			gestor.imprimirLicencia(dtoTitular, dtoLicencia);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			fail("La prueba ha fallado");

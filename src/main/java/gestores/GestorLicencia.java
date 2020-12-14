@@ -121,23 +121,31 @@ public class GestorLicencia {
 		
 		Licencia nueva= new Licencia();
 		nueva.setFechaOtor(new Date());
-		//setear con calcular vigencia
-		nueva.setFechaVenc(new Date("14/12/2025"));
 		nueva.setObservaciones(dtoLicencia.getObservaciones());
+		nueva.setCopia(false);
+		nueva.setActiva(true);
 		nueva.setTipo(dtoLicencia.getTipo());
 		nueva.setTitular(titular);
 		nueva.setTramite(tramite);
+		nueva.setFechaVenc(nueva.calcularVigencia());
+		nueva.setCosto(nueva.calcularCosto());
+		dtoLicencia.setCosto(nueva.getCosto());
+		dtoLicencia.setFechaOtor(nueva.getFechaOtor());
+		dtoLicencia.setFechaVenc(nueva.getFechaVenc());
 		try {
 			daoLicencia.darDeAltaLicencia(nueva);
+			imprimirTicket(dtoLicencia.getTitular(), dtoLicencia);
+			imprimirLicencia(dtoLicencia.getTitular(), dtoLicencia);
 		}
 		catch(Exception ex) {
+			ex.printStackTrace();
 			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
 		}
 	}
     //fin Friggeri
 	private final static long SECONDS_IN_YEAR = 31536000;
 
-	public void ImprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
+	public void imprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
 		DAOLicencia daoLicencia= new DAOLicenciaJPA(); //creo una instancia de la DAO de licencia
 		String numeroFactura= Long.toString(daoLicencia.obtenerNumeroFactura()); //obtengo el numero de la factura
 		
@@ -342,7 +350,7 @@ public class GestorLicencia {
         
 	}
 
-	public void ImprimirLicencia(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
+	public void imprimirLicencia(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
 		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy"); //formato fecha
 		Document documento= new Document(); //creo el documento
         documento.setPageSize(PageSize.A4.rotate()); //establezco tamaño de pagina en A4, orientacion horizontal
@@ -543,7 +551,12 @@ public class GestorLicencia {
         observaciones.setLeading(40); //seteo el interlineado del parrafo
         observaciones.setTabSettings(new TabSettings(28)); //seteo el tabulado
         observaciones.add(Chunk.TABBING); //aplico el tabulado
-        observaciones.add(new Chunk("OBSERVACIONES: "+dtoLicencia.getObservaciones().toUpperCase()));
+        if(dtoLicencia.getObservaciones()!=null) {
+        	observaciones.add(new Chunk("OBSERVACIONES: "+dtoLicencia.getObservaciones().toUpperCase()));
+        }
+        else {
+        	observaciones.add(new Chunk("OBSERVACIONES:"));
+        }
         documento.add(observaciones); //añado el parrafo al documento
         
        //linea que dice si el titular es donante o no
@@ -625,6 +638,8 @@ public class GestorLicencia {
 		nuevaLicencia.setFechaOtor(DTOLicencia.getFechaOtor());
 		nuevaLicencia.setFechaVenc(DTOLicencia.getFechaVenc());
 		nuevaLicencia.setObservaciones(DTOLicencia.getObservaciones());
+		nuevaLicencia.setActiva(true);
+		nuevaLicencia.setCopia(false);
 		Titular titular = new Titular();
 		titular.setTipoDoc(DTOLicencia.getTitular().getTipoDoc());
 		titular.setNumeroDoc(DTOLicencia.getTitular().getNroDoc());
