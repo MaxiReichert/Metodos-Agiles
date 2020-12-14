@@ -5,8 +5,12 @@
  */
 package gestores;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dao.DAOTitularJPA;
 import dto.DTOTitular;
+import entidades.Licencia;
 import entidades.Titular;
 
 
@@ -27,7 +31,7 @@ public class GestorTitular {
 
 		DAOTitularJPA daoTitular = new DAOTitularJPA();
 		boolean ret = false;
-		Titular unTitular = daoTitular.obtenerTitular (doc);
+		Titular unTitular = daoTitular.obtenerTitular(doc);
 		if (unTitular != null) {
 			ret = true; 
 		}
@@ -47,6 +51,24 @@ public class GestorTitular {
 		return titularDTO;
 		
 	}	
+	
+	public void darDeAltaTitular(DTOTitular titularDto) {
+		DAOTitularJPA daoTitular = new DAOTitularJPA();
+		Titular titular = new Titular();
+		titular.setApellido(titularDto.getApellido());
+		titular.setDireccion(titularDto.getDireccion());
+		titular.setDonante(titularDto.getDonador());
+		titular.setFactor(titularDto.getFactorS());
+		titular.setFechaNac(titularDto.getFechaNac());
+		titular.setGrupoSanguineo(titularDto.getGrupoS());
+		List<Licencia> listaLicenciasVacia = new ArrayList<Licencia>();
+		titular.setLicenciaList(listaLicenciasVacia);
+		titular.setNombre(titularDto.getNombre());
+		titular.setNumeroDoc(titularDto.getNroDoc());
+		titular.setTipoDoc(titularDto.getTipoDoc());
+		daoTitular.persistirTitular(titular);
+		
+	}
 }
 	
 	

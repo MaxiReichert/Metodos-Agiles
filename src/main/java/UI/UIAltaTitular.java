@@ -48,7 +48,7 @@ public class UIAltaTitular {
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -59,7 +59,7 @@ public class UIAltaTitular {
 				}
 			}
 		});
-	}*/
+	}
 
 	/**
 	 * Create the application.
@@ -332,6 +332,8 @@ public class UIAltaTitular {
 						dTOT.setGrupoS(tfGrupoSanguineo.getText());
 						dTOT.setFechaNac(dateCFechaNacimiento.getDate());
 						lbEstado.setText("Prodece a crear");
+						gestorT.darDeAltaTitular(dTOT);
+						lbEstado.setText("Titular creado");
 					}
 					else{ //Si existe titular con ese doc
 						lbEstado.setVisible(true);
