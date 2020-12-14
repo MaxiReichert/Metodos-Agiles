@@ -6,6 +6,10 @@
 package entidades;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -213,6 +217,39 @@ public class Licencia implements Serializable {
                 return 0;
         }
     }
+    
+  //Criterios:
+ // Durante la emisión de la licencia, se establece la vigencia de la misma, de acuerdo a la siguiente tabla:
+ // - Menores de 21 años: 1 año la primera vez y 3 años las siguientes
+ // - Hasta 46 años: 5 años
+ // - Hasta 60 años: 4 años
+ // - Hasta 70 años: 3 años
+ // - Mayores de 70 años: 1 año
+ // El día y mes de la fecha de vencimiento deben coincidir con el día y mes de la fecha de nacimiento
+ // del titular, respectivamente. La fecha de inicio de vigencia debe ser la fecha del sistema, y no puede cambiarse.
+
+ public Date calcularVigencia()
+ {
+	LocalDate fechaVigencia;
+	LocalDate fechaNac = this.titular.getFechaNac().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+ 	LocalDate fechaActual = LocalDate.now();
+ 	int edad=Period.between(fechaNac , fechaActual).getYears();
+ 	int aniosVigencia=0;
+
+ 	//Se toma como minima edad 14 años correspondiente a la licencia de tipo LCM
+
+ 	if ((edad>=14) && (edad<=21)) {aniosVigencia=1;}
+ 	else if ((edad>21) && (edad<=46)) {aniosVigencia=5;}
+ 	else if ((edad>46) && (edad<=60)) {aniosVigencia=4;}
+ 	else if ((edad>60) && (edad<=70)) {aniosVigencia=3;}
+    else if (edad>70) {aniosVigencia=1;}
+ 	fechaVigencia = LocalDate.of(fechaActual.getYear()+aniosVigencia, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+ 	
+ 	return Date.from(fechaVigencia.atStartOfDay(ZoneId.systemDefault()).toInstant());
+ }
+    
+    
 
     @Override
     public String toString() {
