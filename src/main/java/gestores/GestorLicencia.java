@@ -497,17 +497,17 @@ public class GestorLicencia {
 		long timeToday = Calendar.getInstance().getTime().getTime();
 		long timeBorn = titularDTO.getFechaNac().getTime();
 		
-		if(tipo == "A" || tipo == "B" || tipo == "F" || tipo == "G") {
+		if(tipo.equals("A") || tipo.equals("B") || tipo.equals("F") || tipo.equals("G")) {
 			
 			if( timeToday - timeBorn  < SECONDS_IN_YEAR * 17) {
 				throw new EmitirLicenciaException("El titular debe tener 17 años o más para obtener una licencia de clase "+tipo);
 			}
-		}else if(tipo == "C" || tipo == "D" || tipo == "E") {
+		}else if(tipo.equals("C") || tipo.equals("D") || tipo.equals("E") {
 			if( timeToday - timeBorn  < SECONDS_IN_YEAR * 21 ) {
 				throw new EmitirLicenciaException("El titular debe tener 21 años o más para obtener una licencia de clase "+tipo);
 			}
-			Predicate<DTOLicencia> licenciaBUnAnioAntesPredicate = lic -> lic.getTipo() == "B" && timeToday - lic.getFechaOtor().getTime() >= SECONDS_IN_YEAR;
-			Predicate<DTOLicencia> licenciaProfesionalPredicate = lic -> lic.getTipo() == "C" || lic.getTipo() == "D" || lic.getTipo() == "E";
+			Predicate<DTOLicencia> licenciaBUnAnioAntesPredicate = lic -> lic.getTipo().equals("B") && timeToday - lic.getFechaOtor().getTime() >= SECONDS_IN_YEAR;
+			Predicate<DTOLicencia> licenciaProfesionalPredicate = lic -> lic.getTipo().equals("C") || lic.getTipo().equals("D") || lic.getTipo().equals("E");
 			
 			boolean alMenosLicenciaBUnAnioAntes = titularDTO.getLicenciaList().stream().anyMatch(licenciaBUnAnioAntesPredicate);
 			
@@ -529,7 +529,7 @@ public class GestorLicencia {
 		catch(Exception ex) {
 			throw new EmitirLicenciaException("Error al recuperar el titular desde la base de datos");
 		}
-		Predicate<Licencia> licenciaDelMismoTipoPredicate = lic -> lic.getTipo() == DTOLicencia.getTipo();
+		Predicate<Licencia> licenciaDelMismoTipoPredicate = lic -> lic.getTipo().equals(DTOLicencia.getTipo());
 		boolean tieneOTuvoLicenciaDelMismoTipo = titular.getLicenciaList().stream().anyMatch(licenciaDelMismoTipoPredicate);
 		
 		if(tieneOTuvoLicenciaDelMismoTipo) {
