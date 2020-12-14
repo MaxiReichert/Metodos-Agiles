@@ -4,13 +4,23 @@ import java.util.Date;
 
 public class DTOLicencia {
 	
+	private int id;
 	private String tipo;
 	private int costo;
 	private Date fechaOtor;
 	private Date fechaVenc;
 	private String observaciones; 
 	private DTOTitular titular;
+	private boolean activa;
+	private boolean copia;
+	private int idTramite;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getTipo() {
 		return tipo;
 	}
@@ -46,6 +56,24 @@ public class DTOLicencia {
 	}
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
+	}
+	public boolean isActiva() {
+		return activa;
+	}
+	public void setActiva(boolean activa) {
+		this.activa = activa;
+	}
+	public boolean isCopia() {
+		return copia;
+	}
+	public void setCopia(boolean copia) {
+		this.copia = copia;
+	}
+	public int getIdTramite() {
+		return idTramite;
+	}
+	public void setIdTramite(int idTramite) {
+		this.idTramite = idTramite;
 	}
 	
 	

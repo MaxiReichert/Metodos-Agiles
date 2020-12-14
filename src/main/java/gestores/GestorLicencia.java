@@ -33,6 +33,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import dao.DAOLicencia;
 import dao.DAOLicenciaJPA;
 import dao.DAOTitularJPA;
 import dto.DTOLicencia;
@@ -61,7 +62,7 @@ public class GestorLicencia {
 		return GLicencia;
 	}
 	
-	public void obtenerLicencia (String doc, DTOTitular titular) {
+	public void obtenerLicencia (String doc, DTOTitular titular) throws Exception {
 		DAOLicenciaJPA daoLicencia = new DAOLicenciaJPA();
 		DTOLicencia dtoLicencia = new DTOLicencia();
 		List<DTOLicencia> dtoLicenciaList = new ArrayList<DTOLicencia>();
@@ -71,21 +72,74 @@ public class GestorLicencia {
 			dtoLicencia = new DTOLicencia();
 			dtoLicencia.setCosto(licenciaList.get(i).getCosto());
 			dtoLicencia.setFechaOtor(licenciaList.get(i).getFechaOtor());
-			dtoLicencia.setFechaVenc(licenciaList.get(i).getFechaOtor());
+			dtoLicencia.setFechaVenc(licenciaList.get(i).getFechaVenc());
 			dtoLicencia.setObservaciones(licenciaList.get(i).getObservaciones());
 			dtoLicencia.setTipo(licenciaList.get(i).getTipo());
+			dtoLicencia.setId(licenciaList.get(i).getId());
+			dtoLicencia.setIdTramite(licenciaList.get(i).getTramite().getId());
 			dtoLicenciaList.add(dtoLicencia);
 		}
 		titular.setLicenciaList(dtoLicenciaList);
+	}
+	
+	public boolean existeLicenciaRenovar(String nroDoc) throws Exception {
+		DAOLicencia daoL= new DAOLicenciaJPA();
+		return daoL.existenLicenciasRenovar(nroDoc);	
+	}
+	
+	public void renovarLicencia(DTOLicencia dtoLicencia) throws Exception {
+		DAOLicencia daoLicencia= new DAOLicenciaJPA();
 		
+		Titular titular= new Titular();
+		titular.setApellido(dtoLicencia.getTitular().getApellido());
+		titular.setDireccion(dtoLicencia.getTitular().getDireccion());
+		titular.setDonante(dtoLicencia.getTitular().getDonador());
+		titular.setFactor(dtoLicencia.getTitular().getFactorS());
+		titular.setFechaNac(dtoLicencia.getTitular().getFechaNac());
+		titular.setGrupoSanguineo(dtoLicencia.getTitular().getGrupoS());
+		titular.setNombre(dtoLicencia.getTitular().getNombre());
+		titular.setNumeroDoc(dtoLicencia.getTitular().getNroDoc());
+		titular.setTipoDoc(dtoLicencia.getTitular().getTipoDoc());
 		
+		Licencia vieja= new Licencia();
+		vieja.setId(dtoLicencia.getId());
+		vieja.setActiva(false);
+		vieja.setCopia(dtoLicencia.isCopia());
+		vieja.setCosto(dtoLicencia.getCosto());
+		vieja.setFechaOtor(dtoLicencia.getFechaOtor());
+		vieja.setFechaVenc(dtoLicencia.getFechaVenc());
+		vieja.setObservaciones(dtoLicencia.getObservaciones());
+		vieja.setTipo(dtoLicencia.getTipo());
+		vieja.setTitular(titular);
+		vieja.setTramite(daoLicencia.buscarTramite(dtoLicencia.getIdTramite()));
+		
+		daoLicencia.actualizarLicencia(vieja);
+		
+		Tramite tramite= new Tramite();
+		tramite.setFechaReali(new Date());
+		tramite.setUsuario(GestorUsuario.obtenerUsuarioActual());
+		
+		Licencia nueva= new Licencia();
+		nueva.setFechaOtor(new Date());
+		//setear con calcular vigencia
+		nueva.setFechaVenc(new Date("14/12/2025"));
+		nueva.setObservaciones(dtoLicencia.getObservaciones());
+		nueva.setTipo(dtoLicencia.getTipo());
+		nueva.setTitular(titular);
+		nueva.setTramite(tramite);
+		try {
+			daoLicencia.darDeAltaLicencia(nueva);
+		}
+		catch(Exception ex) {
+			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
+		}
 	}
     //fin Friggeri
 	private final static long SECONDS_IN_YEAR = 31536000;
 
 	public void ImprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
-		DAOLicenciaJPA daoLicencia= new DAOLicenciaJPA(); //creo una instancia de la DAO de licencia
-		String numeroFactura= Long.toString(daoLicencia.ObtenerNumeroFactura()); //obtengo el numero de la factura
+		DAOLicencia daoLicencia= new DAOLicenciaJPA(); //creo una instancia de la DAO de licencia
+		String numeroFactura= Long.toString(daoLicencia.obtenerNumeroFactura()); //obtengo el numero de la factura
 		
 		Document documentoTicket= new Document(); //creo documento
         documentoTicket.setPageSize(PageSize.A4); //seteo tamaño de pagina

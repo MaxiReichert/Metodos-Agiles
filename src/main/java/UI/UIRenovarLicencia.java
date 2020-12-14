@@ -9,6 +9,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -42,6 +43,7 @@ public class UIRenovarLicencia {
 	private ButtonGroup grupoDonador = new ButtonGroup();
 	private DTOTitular titular;
 	private DTOLicencia licencia;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
 	private int aux;//para recorrer el combobox de tipo de licencia
 	
 	public static void main(String[] args) {
@@ -83,19 +85,20 @@ public class UIRenovarLicencia {
 		comboTipoLicencia.addItem("TIPO_LIC");
 		comboTipoLicencia.setSelectedItem("TIPO_LICENCIA");
 		comboTipoLicencia.setVisible(false);
+		comboTipoLicencia.addActionListener(new ActionListener() {
+			   @Override
+			   public void actionPerformed(ActionEvent e) {
+			      int i=0;
+			      while(!titular.getLicenciaList().get(i).getTipo().equals(comboTipoLicencia.getSelectedItem())) {
+			    	  i++;
+			      }
+			      licencia= titular.getLicenciaList().get(i);
+			      String fechaVenc=dateFormat.format(licencia.getFechaVenc());
+			      tfFechaVencimiento.setText(dateFormat.format(licencia.getFechaVenc()));
+			      // me falta calcular nuevo vencimiento para poder calcular el costo de renovacion
+			   }
+			});
 		frmRenovarLicencia.getContentPane().add(comboTipoLicencia);
-		
-		comboTipoLicencia.addActionListener(new ActionListener() { //cambiar la fecha de vencimiento y tipo para calcular el costo, segun la opcion elegida
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				aux = 0;
-				while(titular.getLicenciaList().get(aux).getTipo().equals(comboTipoLicencia.getSelectedItem())!=true) { //no funciona bien, se queda en un bucle infinito, OJO
-					
-					aux++;
-				}
-				tfFechaVencimiento.setText(""+titular.getLicenciaList().get(aux).getFechaVenc());
-			}
-		});
 		
 		
 		//----------TEXTFIELD--------//
@@ -303,11 +306,8 @@ public class UIRenovarLicencia {
 		lbCostoRenovacion.setBounds(25, 450, 150, 22);
 		frmRenovarLicencia.getContentPane().add(lbCostoRenovacion);
 		
-		// ----- MAXI -----//
-		//aca habría que traer el costo llamando a la tarea calcular costo y mostrarlo por pantalla seteandoselo a un JTextField por ejemplo
 		tfCostoRenovar = new JTextField();
 		tfCostoRenovar.setBounds(220, 450, 150, 22);
-		tfCostoRenovar.setText("Prueba costo renovar"); 
 		tfCostoRenovar.setEditable(false);
 		frmRenovarLicencia.getContentPane().add(tfCostoRenovar);
 
@@ -323,28 +323,16 @@ public class UIRenovarLicencia {
 		btnBuscarTitular.setBounds(675, 14, 89, 19);
 		frmRenovarLicencia.getContentPane().add(btnBuscarTitular);
 		
-		comboTipoLicencia.addActionListener(new ActionListener() {
-			   @Override
-			   public void actionPerformed(ActionEvent e) {
-			      int i=0;
-			      while(titular.getLicenciaList().get(i).getTipo().equals(comboTipoLicencia.getSelectedItem())) {
-			    	  
-			      }
-			   }
-			});
-		
-	
-		
 		btnBuscarTitular.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(tfNroDoc.getText().length()>3) {
 					
 					try {
-						titular = new DTOTitular();
 						GestorTitular gestorT = GestorTitular.getInstance();
-						titular = gestorT.obtenerTitularCompleto(tfNroDoc.getText());
-						if(titular!=null) {
+						
+						if(gestorT.existeTitular(tfNroDoc.getText())) {// verifico que exista el titular
+							titular = gestorT.obtenerTitularCompleto(tfNroDoc.getText());// busco titular
 							lbEstadoTitular.setText('['+titular.getTipoDoc()+"] " + titular.getNroDoc() + " - "+titular.getApellido()+", "+titular.getNombre());
 							lbEstadoTitular.setForeground(Color.GREEN);
 							tfNombre.setText(titular.getNombre()); //luego de encontrada la licencia seteo todos los texteFields
@@ -360,19 +348,21 @@ public class UIRenovarLicencia {
 								rbDonanteNo.setSelected(true);
 							}
 							//buscar licencia
-							licencia = new DTOLicencia();
-							licencia.setTitular(titular);
 							GestorLicencia gestorL = GestorLicencia.getInstance();
-							gestorL.obtenerLicencia(titular.getNroDoc(), titular); //metodo void que le asigna una lista de licenciasDTO a titular en su lista de licenciasDTO
-							lbEstadoLicencia.setText("Se encontró una o más licencias"); //falta validacion si no se encuentra licencia para ese titular
-							lbEstadoLicencia.setForeground(Color.GREEN);
-							comboTipoLicencia.setVisible(true);
-							for(int i=0;i<titular.getLicenciaList().size();i++) {
-								comboTipoLicencia.addItem(titular.getLicenciaList().get(i).getTipo()); //agrego los tipos de licencia al combo
+							if(gestorL.existeLicenciaRenovar(titular.getNroDoc())) {
+								gestorL.obtenerLicencia(titular.getNroDoc(), titular); //metodo void que le asigna una lista de licenciasDTO a titular en su lista de licenciasDTO
+								lbEstadoLicencia.setText("Se encontró una o más licencias"); //falta validacion si no se encuentra licencia para ese titular
+								lbEstadoLicencia.setForeground(Color.GREEN);
+								comboTipoLicencia.setVisible(true);
+								for(int i=0;i<titular.getLicenciaList().size();i++) {
+									comboTipoLicencia.addItem(titular.getLicenciaList().get(i).getTipo()); //agrego los tipos de licencia al combo
+								}
 							}
-							
-							
-							
+							else {
+								lbEstadoLicencia.setText("NO HAY LICENCIAS PARA RENOVAR");
+								lbEstadoLicencia.setForeground(Color.RED);
+								lbEstadoLicencia.setVisible(true);
+							}
 						}
 						else {
 							lbEstadoTitular.setText("TITULAR NO ENCONTRADO");
@@ -415,22 +405,25 @@ public class UIRenovarLicencia {
 				if (comboTipoLicencia.getSelectedIndex() == 0){ //ver esta condicion porque no me funciono lo del combobox
 					completo = false;
 				};
-			
-				//ComprobarFecha
-				/*if (tfFechaVencimiento.getText()//<fecha actual) { //pasar la fecha a formato date y comprobar si vencio
-					completo = false;						//si vencio hay que hacer la persistencia de la nueva licencia renovada con la fecha de vencimiento calculad por la tarea de calcular vencimiento
-				}*/
+				
 				if (completo) { //Si todos los campos se completaron
-					/* HACER LA PERSISTENCIA
-					 * DAR DE BAJA LOGICA EL REGISTRO QUE TRAJIMOS DESDE LA BD
-					 * QUIZAS SE DEBA CREAR UNA LICENCIADTO COMO AUXILIAR PARA METER TODAS LAS MODIFICACIONS AHI Y ENVIARLO PARA CREAR EN LA BASE DE DATOS
-					 * CREO QUE SE PODRIA LLAMAR A ALGUNA FUNCION DEL GESTOR LICENCIA PARA CREAR UNA NUEVA
-					 * DAR DE ALTA UN NUEVO REGISTRO CON LOS CAMPOS ACTUALIZADOS (SEA NOMBRE, APELLIDO, DIRECCION, DONANTE O FECHA DE VENCIMIENTO)
+					GestorLicencia gestorL= GestorLicencia.getInstance();
+					try {
+						gestorL.renovarLicencia(licencia);
+						lbEstadoLicencia.setText("LA LICENCIA SE HA RENOVADO CON EXITO");
+						lbEstadoLicencia.setForeground(Color.GREEN);
+						lbEstadoLicencia.setVisible(true);
+					} catch (Exception e1) {
+						lbEstadoLicencia.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
+						lbEstadoLicencia.setForeground(Color.RED);
+						System.err.println(e1.getMessage());
+					}
 					
-					*/
 				}
 				else { //Si no estan todos completos
-					//setear un lbl de EstadoLicencia (esta definido mas arriba lbEstadoLicencia) indicando el error
+					lbEstadoLicencia.setText("NO DEJAR CAMPOS VACIOS O SIN SELECCIOANR");
+					lbEstadoLicencia.setForeground(Color.RED);
+					lbEstadoLicencia.setVisible(true);
 				}
 			}
 		};
@@ -439,7 +432,7 @@ public class UIRenovarLicencia {
 		
 		
 		
-		JButton btnAtras = new JButton("Atrás"); //boton atrás, FALTA HACERLO FUNCIONAR
+		JButton btnAtras = new JButton("Atrás"); //boton atrás, FALTA UI MENU PARA ENLAZAR
 		btnAtras.setBounds(150, 510, 181, 30);
 		frmRenovarLicencia.getContentPane().add(btnAtras);
 	}

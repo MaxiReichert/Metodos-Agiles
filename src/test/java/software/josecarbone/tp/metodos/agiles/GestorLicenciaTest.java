@@ -19,7 +19,7 @@ public class GestorLicenciaTest {
 	public void imprimirTicketTest() {
 		DTOTitular dtoTitular= new DTOTitular();
 		DTOLicencia dtoLicencia= new DTOLicencia();
-		GestorLicencia gestorLicencia= new GestorLicencia();
+		GestorLicencia gestorLicencia= GestorLicencia.getInstance();
 		
 		dtoTitular.setApellido("Reichert");
 		dtoTitular.setNombre("Maximiliano");
@@ -43,7 +43,7 @@ public class GestorLicenciaTest {
 	public void imprimirLicenciaTest() {
 		DTOTitular dtoTitular= new DTOTitular();
 		DTOLicencia dtoLicencia= new DTOLicencia();
-		GestorLicencia gestor= new GestorLicencia();
+		GestorLicencia gestor= GestorLicencia.getInstance();
 		
 		dtoTitular.setApellido("Reichert");
 		dtoTitular.setDireccion("Calle Siempre Viva 234");

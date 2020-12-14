@@ -40,6 +40,8 @@ fecha_venc DATE NOT NULL,
 costo INTEGER NOT NULL,
 observaciones VARCHAR(200),
 tramite INTEGER NOT NULL,
+activa boolean DEFAULT true NOT NULL,
+copia boolean DEFAULT false NOT NULL,
 PRIMARY KEY(id),
 FOREIGN KEY(titular) REFERENCES titular(numero_doc),
 FOREIGN KEY(tramite) REFERENCES tramite(id));

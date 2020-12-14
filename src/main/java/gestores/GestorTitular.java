@@ -5,6 +5,7 @@
  */
 package gestores;
 
+import dao.DAOTitular;
 import dao.DAOTitularJPA;
 import dto.DTOTitular;
 import entidades.Titular;
@@ -48,7 +49,7 @@ public class GestorTitular {
 		
 	}	
 	
-	public DTOTitular obtenerTitularCompleto (String doc) {
+	public DTOTitular obtenerTitularCompleto (String doc){
 		DAOTitularJPA daoTitular = new DAOTitularJPA();
 		Titular titular = daoTitular.obtenerTitular (doc);
 		DTOTitular titularDTO = new DTOTitular();
@@ -64,7 +65,12 @@ public class GestorTitular {
 		
 		return titularDTO;
 		
-	}	
+	}
+	
+	public boolean existeTitular(String doc)throws Exception {
+		DAOTitular daoTitular= new DAOTitularJPA();
+		return daoTitular.existeTitular(doc);
+	}
 }
 	
 	
