@@ -210,7 +210,6 @@ public class UIEmitirLicencia {
 		DTOLicencia dto = new DTOLicencia();
 		
 		if(dtoTitularSeleccionado != null) {
-			System.out.println(dtoTitularSeleccionado.getApellido());
 			dto.setTitular(dtoTitularSeleccionado);
 		}else {
 			throw new EmitirLicenciaException("No se ha seleccionado un titular");

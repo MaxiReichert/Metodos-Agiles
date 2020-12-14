@@ -522,8 +522,15 @@ public class GestorLicencia {
 				}
 			}
 		}
-		Predicate<DTOLicencia> licenciaDelMismoTipoPredicate = lic -> lic.getTipo() == DTOLicencia.getTipo();
-		boolean tieneOTuvoLicenciaDelMismoTipo = titularDTO.getLicenciaList().stream().anyMatch(licenciaDelMismoTipoPredicate);
+		Titular titular;
+		try {
+			titular = DAOTitularJPA.getInstance().obtenerTitular(DTOLicencia.getTitular().getNroDoc());
+		}
+		catch(Exception ex) {
+			throw new EmitirLicenciaException("Error al recuperar el titular desde la base de datos");
+		}
+		Predicate<Licencia> licenciaDelMismoTipoPredicate = lic -> lic.getTipo() == DTOLicencia.getTipo();
+		boolean tieneOTuvoLicenciaDelMismoTipo = titular.getLicenciaList().stream().anyMatch(licenciaDelMismoTipoPredicate);
 		
 		if(tieneOTuvoLicenciaDelMismoTipo) {
 			throw new EmitirLicenciaException("El titular ya posee la licencia. Si expiró, debe renovarla");
