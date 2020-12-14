@@ -118,13 +118,7 @@ public class Titular implements Serializable {
         this.direccion = direccion;
     }
 
-    public String getTipoLicSolicitada() {
-        return tipoLicSolicitada;
-    }
 
-    public void setTipoLicSolicitada(String tipoLicSolicitada) {
-        this.tipoLicSolicitada = tipoLicSolicitada;
-    }
 
     public String getGrupoSanguineo() {
         return grupoSanguineo;
