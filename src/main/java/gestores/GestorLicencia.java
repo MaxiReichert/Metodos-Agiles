@@ -541,7 +541,7 @@ public class GestorLicencia {
 		Usuario usuario = GestorUsuario.obtenerUsuarioActual();
 		nuevaLicencia.setTramite(tramite);
 		tramite.setUsuario(usuario);
-		
+
 		
 		
 		try {

@@ -48,7 +48,7 @@ private static DAOLicenciaJPA instance = null;
 			em.merge(titular);
 			licencia.setTitular(titular);
 			
-			licencia.setFechaVenc(licencia.calcularVenc());
+			licencia.setFechaVenc(licencia.calcularVigencia());
 			licencia.setCosto(licencia.calcularCosto().intValue());
 			
 			em.merge(licencia);
