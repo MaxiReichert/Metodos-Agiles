@@ -104,7 +104,7 @@ public class UIEmitirLicencia {
 		frmAltaCliente.getContentPane().add(txtNroDOC);
 		
 		JButton seleccionarTitularButton = new JButton("Seleccionar Titular");
-		seleccionarTitularButton.addMouseListener(new MouseAdapter() {
+		/*seleccionarTitularButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(txtNroDOC.getText().length()>3) {
@@ -127,7 +127,7 @@ public class UIEmitirLicencia {
 					
 				}
 			}
-		});
+		});*/
 		seleccionarTitularButton.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		seleccionarTitularButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

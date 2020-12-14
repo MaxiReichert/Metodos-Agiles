@@ -34,16 +34,15 @@ import javax.swing.SwingConstants;
 
 public class UIAltaTitular {
 
-	private JFrame frmAltaCliente;
-	private JTextField tfNroDoc;
-	private JTextField tfNombre;
-	private JTextField tfApellido;
-	private JTextField tfDireccion;
-	private JTextField tfGrupoSanguineo;
-	private JTextField tfFactor;
-	private ButtonGroup grupoDonador = new ButtonGroup();
-	DTOTitular dTOT = new DTOTitular();
-	GestorTitular gestorT = GestorTitular.getInstance();
+	private static JTextField tfNroDoc;
+	private static JTextField tfNombre;
+	private static JTextField tfApellido;
+	private static JTextField tfDireccion;
+	private static JTextField tfGrupoSanguineo;
+	private static JTextField tfFactor;
+	private static ButtonGroup grupoDonador = new ButtonGroup();
+	static DTOTitular dTOT = new DTOTitular();
+	static GestorTitular gestorT = GestorTitular.getInstance();
 	SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
 	/**
 	 * Launch the application.
@@ -64,31 +63,29 @@ public class UIAltaTitular {
 	/**
 	 * Create the application.
 	 */
-	public UIAltaTitular() {
-		initialize();
-		this.frmAltaCliente.setVisible(true);
-	}
+	public static void iniciar() {
+		final Marco frmAltaTitular = new Marco(800,600,"Alta titular");
+		frmAltaTitular.getContentPane().setLayout(null);
+		//frmAltaTitular.getContentPane().setBackground(new Color (192, 192, 192));
+		frmAltaTitular.setLocationRelativeTo(null);
+		frmAltaTitular.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frmAltaCliente = new JFrame();
-		frmAltaCliente.setTitle("Alta cliente");
-		frmAltaCliente.setBounds(100, 100, 800, 600);
-		frmAltaCliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmAltaCliente.getContentPane().setLayout(null);
-		
+		/*frmAltaTitular.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent evt) {
+				close();
+			}
+		})*/
 		//----------COMBOBOX----------//
 		final JComboBox comboTipoDoc = new JComboBox();
 		comboTipoDoc.setBounds(146, 13, 180, 22);
 		comboTipoDoc.setModel(new DefaultComboBoxModel(tipoDocumento.values()));
-		frmAltaCliente.getContentPane().add(comboTipoDoc);
+		frmAltaTitular.getContentPane().add(comboTipoDoc);
 		
 		final JComboBox comboClaseSolicitada = new JComboBox();
 		comboClaseSolicitada.setBounds(220, 310, 181, 22);
 		comboClaseSolicitada.setModel(new DefaultComboBoxModel(tipoLicencia.values()));
-		frmAltaCliente.getContentPane().add(comboClaseSolicitada);
+		frmAltaTitular.getContentPane().add(comboClaseSolicitada);
 		
 		
 		
@@ -114,7 +111,7 @@ public class UIAltaTitular {
 					}
 			   }
 		});
-		frmAltaCliente.getContentPane().add(tfNroDoc);
+		frmAltaTitular.getContentPane().add(tfNroDoc);
 		
 		tfNombre = new JTextField();
 		tfNombre.setBounds(220, 70, 181, 20);
@@ -134,7 +131,7 @@ public class UIAltaTitular {
 			}
 		});
 
-		frmAltaCliente.getContentPane().add(tfNombre);
+		frmAltaTitular.getContentPane().add(tfNombre);
 	
 		
 		tfApellido = new JTextField();
@@ -154,7 +151,7 @@ public class UIAltaTitular {
 				}
 			}
 		});
-		frmAltaCliente.getContentPane().add(tfApellido);
+		frmAltaTitular.getContentPane().add(tfApellido);
 
 		
 		tfDireccion = new JTextField();
@@ -169,7 +166,7 @@ public class UIAltaTitular {
 				}
 			}
 		});
-		frmAltaCliente.getContentPane().add(tfDireccion);
+		frmAltaTitular.getContentPane().add(tfDireccion);
 		
 		
 		tfGrupoSanguineo = new JTextField();
@@ -189,7 +186,7 @@ public class UIAltaTitular {
 			}
 		});
 		tfGrupoSanguineo.setColumns(10);
-		frmAltaCliente.getContentPane().add(tfGrupoSanguineo);
+		frmAltaTitular.getContentPane().add(tfGrupoSanguineo);
 
 		
 		
@@ -206,7 +203,7 @@ public class UIAltaTitular {
 				}
 			}
 		});
-		frmAltaCliente.getContentPane().add(tfFactor);
+		frmAltaTitular.getContentPane().add(tfFactor);
 		
 
 		
@@ -219,67 +216,67 @@ public class UIAltaTitular {
 		JLabel lbTipoDoc = new JLabel("Tipo documento");
 		lbTipoDoc.setBounds(23, 10, 153, 22);
 		lbTipoDoc.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbTipoDoc);
+		frmAltaTitular.getContentPane().add(lbTipoDoc);
 		
 		
 		JLabel lbNroDoc = new JLabel("Numero documento");
 		lbNroDoc.setBounds(350, 11, 153, 22);
 		lbNroDoc.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbNroDoc);
+		frmAltaTitular.getContentPane().add(lbNroDoc);
 		
 		
 		JLabel lbNombre = new JLabel("Nombre");
 		lbNombre.setBounds(25, 70, 151, 22);
 		lbNombre.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbNombre);
+		frmAltaTitular.getContentPane().add(lbNombre);
 		
 		
 		JLabel lbApellido = new JLabel("Apellido");
 		lbApellido.setBounds(25, 110, 151, 22);
 		lbApellido.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbApellido);
+		frmAltaTitular.getContentPane().add(lbApellido);
 		
 		JLabel lbFechaNac = new JLabel("Fecha de nacimiento");
 		lbFechaNac.setBounds (25, 190, 151, 22);
 		lbFechaNac.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbFechaNac);
+		frmAltaTitular.getContentPane().add(lbFechaNac);
 		
 		JLabel lbDireccion = new JLabel("Direccion");
 		lbDireccion.setBounds (25, 150, 124, 22);
 		lbDireccion.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbDireccion);
+		frmAltaTitular.getContentPane().add(lbDireccion);
 		
 		JLabel lbClaseSolicitada = new JLabel("Clase solicitada");
 		lbClaseSolicitada.setBounds (25, 310, 151, 22);
 		lbClaseSolicitada.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbClaseSolicitada);
+		frmAltaTitular.getContentPane().add(lbClaseSolicitada);
 		
 		JLabel lbFactorSanguineo = new JLabel("Factor sanguineo");
 		lbFactorSanguineo.setBounds (25, 230, 140, 22);
 		lbFactorSanguineo.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbFactorSanguineo);
+		frmAltaTitular.getContentPane().add(lbFactorSanguineo);
 	
 		JLabel lbGrupoSanguineo = new JLabel("Grupo sanguineo");
 		lbGrupoSanguineo.setBounds (25, 270, 151, 22);
 		lbGrupoSanguineo.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbGrupoSanguineo);
+		frmAltaTitular.getContentPane().add(lbGrupoSanguineo);
 		
 		JLabel lbDonante = new JLabel("Donante de organos:");
 		lbDonante.setBounds(25, 369, 174, 22);
 		lbDonante.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbDonante);
+		frmAltaTitular.getContentPane().add(lbDonante);
 		
 		////------TEXTO DE ESTADO 
 		final JLabel lbEstado = new JLabel("New label");
 		lbEstado.setBounds(280, 497, 270, 14);
 		lbEstado.setVisible(false);
-		frmAltaCliente.getContentPane().add(lbEstado);
+		frmAltaTitular.getContentPane().add(lbEstado);
 		
 		
 		//----------DATE----------//
 		final JDateChooser dateCFechaNacimiento = new JDateChooser();
 		dateCFechaNacimiento.setBounds(220, 190, 181, 20);
-		frmAltaCliente.getContentPane().add(dateCFechaNacimiento);
+		frmAltaTitular.getContentPane().add(dateCFechaNacimiento);
 		
 		//----------BUTTONS----------//
 		JButton btnCrear = new JButton("Crear");
@@ -345,7 +342,7 @@ public class UIAltaTitular {
 			}
 		};
 		btnCrear.addActionListener(AccionCrear);
-		frmAltaCliente.getContentPane().add(btnCrear);
+		frmAltaTitular.getContentPane().add(btnCrear);
 		
 
 		
@@ -353,12 +350,15 @@ public class UIAltaTitular {
 		rbDonanteNo.setBounds(23, 398, 64, 23);
 		rbDonanteNo.setSelected(true);
 		grupoDonador.add(rbDonanteNo);
-		frmAltaCliente.getContentPane().add(rbDonanteNo);
+		frmAltaTitular.getContentPane().add(rbDonanteNo);
 		
 		JRadioButton rbDonanteSi = new JRadioButton("Si");
 		rbDonanteSi.setBounds(173, 398, 57, 23);
 		grupoDonador.add(rbDonanteSi);
-		frmAltaCliente.getContentPane().add(rbDonanteSi);
+		frmAltaTitular.getContentPane().add(rbDonanteSi);
+		
+		///////////////////////////////////////////////////////////
 		
 	}
+
 }
