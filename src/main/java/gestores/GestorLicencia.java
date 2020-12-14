@@ -156,6 +156,61 @@ public class GestorLicencia {
 		}
 	}
 	
+	/**
+	 * Este método emite una copia de una licencia
+	 * */
+	public void emitirCopia(DTOLicencia dtoLicencia) throws Exception {
+		DAOLicencia daoLicencia= new DAOLicenciaJPA();
+		
+		// creo y le seteo los valroes al titular
+		Titular titular= new Titular();
+		titular.setApellido(dtoLicencia.getTitular().getApellido());
+		titular.setDireccion(dtoLicencia.getTitular().getDireccion());
+		titular.setDonante(dtoLicencia.getTitular().getDonador());
+		titular.setFactor(dtoLicencia.getTitular().getFactorS());
+		titular.setFechaNac(dtoLicencia.getTitular().getFechaNac());
+		titular.setGrupoSanguineo(dtoLicencia.getTitular().getGrupoS());
+		titular.setNombre(dtoLicencia.getTitular().getNombre());
+		titular.setNumeroDoc(dtoLicencia.getTitular().getNroDoc());
+		titular.setTipoDoc(dtoLicencia.getTitular().getTipoDoc());
+		
+		Licencia licencia= new Licencia();
+		licencia.setId(dtoLicencia.getId());
+		licencia.setActiva(false);
+		licencia.setCopia(dtoLicencia.isCopia());
+		licencia.setCosto(dtoLicencia.getCosto());
+		licencia.setFechaOtor(dtoLicencia.getFechaOtor());
+		licencia.setFechaVenc(dtoLicencia.getFechaVenc());
+		licencia.setObservaciones(dtoLicencia.getObservaciones());
+		licencia.setTipo(dtoLicencia.getTipo());
+		licencia.setTitular(titular);
+		licencia.setTramite(daoLicencia.buscarTramite(dtoLicencia.getIdTramite()));
+		
+		// paso la licencia anterior a inactiva
+		daoLicencia.actualizarLicencia(licencia);
+		
+		//creo el nuevo tramite
+		Tramite tramite= new Tramite();
+		tramite.setFechaReali(new Date());
+		tramite.setUsuario(GestorUsuario.obtenerUsuarioActual());
+		
+		//seteo los cambios para el nuevo registro de licencia
+		licencia.setActiva(true);
+		licencia.setCopia(true);
+		licencia.setTramite(tramite);
+		licencia.setId(null);
+		
+		try {// guardo la nueva licencia e imprimo ticket y licencia
+			daoLicencia.darDeAltaLicencia(licencia);
+			imprimirTicket(dtoLicencia.getTitular(), dtoLicencia);
+			imprimirLicencia(dtoLicencia.getTitular(), dtoLicencia);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
+		}
+	}
+	
 	private final static long SECONDS_IN_YEAR = 31536000;
 
 	public void imprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{

@@ -26,7 +26,7 @@ import enumeradores.tipoDocumento;
 import gestores.GestorLicencia;
 import gestores.GestorTitular;
 
-public class UIRenovarLicencia {
+public class UIRenovarLicenciaEmitirCopia {
 	
 	private JFrame frmRenovarLicencia;
 	private JTextField tfNroDoc;
@@ -50,7 +50,7 @@ public class UIRenovarLicencia {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIRenovarLicencia window = new UIRenovarLicencia();
+					UIRenovarLicenciaEmitirCopia window = new UIRenovarLicenciaEmitirCopia(2);
 					window.frmRenovarLicencia.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -58,15 +58,19 @@ public class UIRenovarLicencia {
 			}
 		});
 	}
-	//constructor
-	public UIRenovarLicencia() {
-		initialize();
+	/**
+	 * constructor de la clase
+	 * si tipo es 1 renueva licencia
+	 * si tipo es 2 emite copia
+	 * */
+	public UIRenovarLicenciaEmitirCopia(int tipo) {
+		initialize(tipo);
 		this.frmRenovarLicencia.setVisible(true);
 	}
 	
 	//inicializar el contenido del frame
 	
-	private void initialize() {
+	private void initialize(int tipo) {
 		frmRenovarLicencia = new JFrame();
 		frmRenovarLicencia.setTitle("Renovar Licencia");
 		frmRenovarLicencia.setBounds(100, 100, 800, 600);
@@ -378,9 +382,15 @@ public class UIRenovarLicencia {
 			}
 		});
 		
-		JButton btnRenovar = new JButton("Renovar"); //boton renovar licencia
-		btnRenovar.setBounds(489, 510, 181, 30);
-		frmRenovarLicencia.getContentPane().add(btnRenovar);
+		JButton btnRenovarOCopia = new JButton(); //boton renovar licencia o emitir copia
+		if(tipo==1) {
+			btnRenovarOCopia.setText("Renovar");
+		}
+		else {
+			btnRenovarOCopia.setText("Emitir Copia");
+		}
+		btnRenovarOCopia.setBounds(489, 510, 181, 30);
+		frmRenovarLicencia.getContentPane().add(btnRenovarOCopia);
 		ActionListener AccionCrear = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) { 
@@ -410,10 +420,19 @@ public class UIRenovarLicencia {
 					licencia.setTitular(titular);
 					GestorLicencia gestorL= GestorLicencia.getInstance();
 					try {// renuevo la licencia y muestro un mensaje de exito
-						gestorL.renovarLicencia(licencia);
-						lbEstadoLicencia.setText("LA LICENCIA SE HA RENOVADO CON EXITO");
-						lbEstadoLicencia.setForeground(Color.GREEN);
-						lbEstadoLicencia.setVisible(true);
+						if(tipo==1) {
+							gestorL.renovarLicencia(licencia);
+							lbEstadoLicencia.setText("LA LICENCIA SE HA RENOVADO CON EXITO");
+							lbEstadoLicencia.setForeground(Color.GREEN);
+							lbEstadoLicencia.setVisible(true);
+						}
+						else {
+							gestorL.emitirCopia(licencia);
+							lbEstadoLicencia.setText("SE HA EMITIDO UNA COPIA CON EXITO");
+							lbEstadoLicencia.setForeground(Color.GREEN);
+							lbEstadoLicencia.setVisible(true);
+						}
+						
 					} catch (Exception e1) {// si se produce una excepcion muestro un error
 						lbEstadoLicencia.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
 						lbEstadoLicencia.setForeground(Color.RED);
@@ -428,8 +447,8 @@ public class UIRenovarLicencia {
 				}
 			}
 		};
-		btnRenovar.addActionListener(AccionCrear);
-		frmRenovarLicencia.getContentPane().add(btnRenovar);
+		btnRenovarOCopia.addActionListener(AccionCrear);
+		frmRenovarLicencia.getContentPane().add(btnRenovarOCopia);
 		
 		
 		
