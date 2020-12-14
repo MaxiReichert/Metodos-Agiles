@@ -409,12 +409,12 @@ public class UIRenovarLicencia {
 				if (completo) { //Si todos los campos se completaron
 					licencia.setTitular(titular);
 					GestorLicencia gestorL= GestorLicencia.getInstance();
-					try {
+					try {// renuevo la licencia y muestro un mensaje de exito
 						gestorL.renovarLicencia(licencia);
 						lbEstadoLicencia.setText("LA LICENCIA SE HA RENOVADO CON EXITO");
 						lbEstadoLicencia.setForeground(Color.GREEN);
 						lbEstadoLicencia.setVisible(true);
-					} catch (Exception e1) {
+					} catch (Exception e1) {// si se produce una excepcion muestro un error
 						lbEstadoLicencia.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
 						lbEstadoLicencia.setForeground(Color.RED);
 						System.err.println(e1.getMessage());

@@ -49,7 +49,6 @@ import exceptions.EmitirLicenciaException;
  * @author Maxi
  */
 public class GestorLicencia {
-	//modificacion Friggeri
 	private static GestorLicencia GLicencia ; // Patron Singleton -- Unica instancia tipo gestor creada.
 
 	private GestorLicencia(){ // Patron Singleton -- Constructor privatizado para no permitir su uso.
@@ -62,6 +61,9 @@ public class GestorLicencia {
 		return GLicencia;
 	}
 	
+	/**
+	 * Metodo que me permite obtener todas las licencias activas de un titular
+	 * */
 	public void obtenerLicencia (String doc, DTOTitular titular) throws Exception {
 		DAOLicenciaJPA daoLicencia = new DAOLicenciaJPA();
 		DTOLicencia dtoLicencia = new DTOLicencia();
@@ -82,14 +84,21 @@ public class GestorLicencia {
 		titular.setLicenciaList(dtoLicenciaList);
 	}
 	
+	/**
+	 * Metodo que verifica si existen licencias para renovar
+	 * */
 	public boolean existeLicenciaRenovar(String nroDoc) throws Exception {
 		DAOLicencia daoL= new DAOLicenciaJPA();
 		return daoL.existenLicenciasRenovar(nroDoc);	
 	}
 	
+	/**
+	 * Metodo que renueva la licencia
+	 * */
 	public void renovarLicencia(DTOLicencia dtoLicencia) throws Exception {
 		DAOLicencia daoLicencia= new DAOLicenciaJPA();
 		
+		// creo y le seteo los valroes al titular
 		Titular titular= new Titular();
 		titular.setApellido(dtoLicencia.getTitular().getApellido());
 		titular.setDireccion(dtoLicencia.getTitular().getDireccion());
@@ -101,6 +110,7 @@ public class GestorLicencia {
 		titular.setNumeroDoc(dtoLicencia.getTitular().getNroDoc());
 		titular.setTipoDoc(dtoLicencia.getTitular().getTipoDoc());
 		
+		//creo la licencia actualizar y le seteo los valores
 		Licencia vieja= new Licencia();
 		vieja.setId(dtoLicencia.getId());
 		vieja.setActiva(false);
@@ -113,12 +123,15 @@ public class GestorLicencia {
 		vieja.setTitular(titular);
 		vieja.setTramite(daoLicencia.buscarTramite(dtoLicencia.getIdTramite()));
 		
+		// paso la licencia anterior a inactiva
 		daoLicencia.actualizarLicencia(vieja);
 		
+		//creo el nuevo tramite
 		Tramite tramite= new Tramite();
 		tramite.setFechaReali(new Date());
 		tramite.setUsuario(GestorUsuario.obtenerUsuarioActual());
 		
+		//creo la nueva licencia y le seteo los valores
 		Licencia nueva= new Licencia();
 		nueva.setFechaOtor(new Date());
 		nueva.setObservaciones(dtoLicencia.getObservaciones());
@@ -132,7 +145,7 @@ public class GestorLicencia {
 		dtoLicencia.setCosto(nueva.getCosto());
 		dtoLicencia.setFechaOtor(nueva.getFechaOtor());
 		dtoLicencia.setFechaVenc(nueva.getFechaVenc());
-		try {
+		try {// guardo la nueva licencia e imprimo ticket y licencia
 			daoLicencia.darDeAltaLicencia(nueva);
 			imprimirTicket(dtoLicencia.getTitular(), dtoLicencia);
 			imprimirLicencia(dtoLicencia.getTitular(), dtoLicencia);
@@ -142,7 +155,7 @@ public class GestorLicencia {
 			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
 		}
 	}
-    //fin Friggeri
+	
 	private final static long SECONDS_IN_YEAR = 31536000;
 
 	public void imprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
