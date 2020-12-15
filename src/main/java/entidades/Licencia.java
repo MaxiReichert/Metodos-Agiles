@@ -12,6 +12,8 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -73,6 +76,16 @@ public class Licencia implements Serializable {
     @Basic(optional = false)
     @Column(name = "copia")
     private boolean copia;
+    @OneToMany(mappedBy= "titular")
+	private List<Licencia> licenciaList;
+
+    public List<Licencia> getLicenciaList() {
+		return licenciaList;
+	}
+
+	public void setLicenciaList(List<Licencia> licenciaList) {
+		this.licenciaList = licenciaList;
+	}
 
     public Licencia() {
     }
