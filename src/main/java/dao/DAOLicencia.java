@@ -23,4 +23,6 @@ public interface DAOLicencia {
 	public Tramite buscarTramite(int idTramite) throws Exception;
 	
 	public List<Licencia> obtenerLicenciasExpiradas();
+	
+	public List<Licencia> obtenerLicenciasVigentes(int criterio);
 }
