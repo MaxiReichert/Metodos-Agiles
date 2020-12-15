@@ -46,7 +46,7 @@ public class UIListaLicenciasVigentes {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					listaLicencias=gestorL.obtenerLicenciasVigentesActivas(1);
-					for(int i=0; i<modelo.getRowCount(); i++) {
+					for(int i=modelo.getRowCount()-1; i>=0; i--) {
 						modelo.removeRow(i);
 					}
 					//agrego las filas a de encabezado
@@ -90,7 +90,7 @@ public class UIListaLicenciasVigentes {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					listaLicencias=gestorL.obtenerLicenciasVigentesActivas(2);
-					for(int i=0; i<modelo.getRowCount(); i++) {
+					for(int i=modelo.getRowCount()-1; i>=0; i--) {
 						modelo.removeRow(i);
 					}
 					//agrego las filas a de encabezado
@@ -134,7 +134,7 @@ public class UIListaLicenciasVigentes {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					listaLicencias=gestorL.obtenerLicenciasVigentesActivas(3);
-					for(int i=0; i<modelo.getRowCount(); i++) {
+					for(int i=modelo.getRowCount()-1; i>=0; i--) {
 						modelo.removeRow(i);
 					}
 					//agrego las filas a de encabezado
@@ -178,7 +178,7 @@ public class UIListaLicenciasVigentes {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					listaLicencias=gestorL.obtenerLicenciasVigentesActivas(4);
-					for(int i=0; i<modelo.getRowCount(); i++) {
+					for(int i=modelo.getRowCount()-1; i>=0; i--) {
 						modelo.removeRow(i);
 					}
 					//agrego las filas a de encabezado

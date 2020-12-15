@@ -146,7 +146,7 @@ private static DAOLicenciaJPA instance = null;
 		List<Licencia> result=null;
 		switch(criterio) {
 		case 1:
-			result=(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.activa= ?1 AND l.fechaVenc > ?2 ORDER BY l.titular.nombre, l.titular.apellido ASC")
+			result=(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.activa= ?1 AND l.fechaVenc > ?2 ORDER BY l.titular.apellido ASC, l.titular.nombre")
 		.setParameter(1, true)
 		.setParameter(2, Calendar.getInstance().getTime())
 		.getResultList();
