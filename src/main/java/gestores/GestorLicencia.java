@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -737,6 +738,62 @@ public class GestorLicencia {
 		
 			
 
+	}
+	
+	public List<DTOLicencia> buscarLicenciasExpiradas() {
+		DAOLicencia dao= new DAOLicenciaJPA();
+		List<Licencia> listaLicencias=dao.obtenerLicenciasExpiradas();
+		List<DTOLicencia> listaDto= new ArrayList<DTOLicencia>();
+		for(Licencia l: listaLicencias) {
+			DTOLicencia dtoL= new DTOLicencia();
+			DTOTitular dtoT= new DTOTitular();
+			dtoT.setApellido(l.getTitular().getApellido());
+			dtoT.setNombre(l.getTitular().getNombre());
+			dtoT.setTipoDoc(l.getTitular().getTipoDoc());
+			dtoT.setNroDoc(l.getTitular().getNumeroDoc());
+			dtoL.setTitular(dtoT);
+			dtoL.setTipo(l.getTipo());
+			dtoL.setFechaOtor(l.getFechaOtor());
+			dtoL.setFechaVenc(l.getFechaVenc());
+			listaDto.add(dtoL);
+		}
+		return listaDto;
+	}
+	
+	public List<DTOLicencia> obtenerLicenciasVigentesActivas (int criterio) throws Exception {
+		DAOLicenciaJPA daoLicencia = new DAOLicenciaJPA();
+		DTOLicencia dtoLicencia = new DTOLicencia();
+		List<Licencia> licenciaList = daoLicencia.obtenerLicenciasVigentes(criterio);
+		GestorTitular gestorT = GestorTitular.getInstance();
+		
+		List<DTOLicencia> dtoLicenciaList = licenciaList
+			.stream()
+			.map((Licencia l) -> {
+				DTOLicencia dtoLic = new DTOLicencia();
+				dtoLic.setActiva(l.isActiva());
+				dtoLic.setCopia(l.isCopia());
+				dtoLic.setCosto(l.getCosto());
+				dtoLic.setFechaOtor(l.getFechaOtor());
+				dtoLic.setFechaVenc(l.getFechaVenc());
+				dtoLic.setId(l.getId());
+				dtoLic.setIdTramite(l.getTramite().getId());
+				dtoLic.setObservaciones(l.getObservaciones());
+				dtoLic.setTipo(l.getTipo());
+				DTOTitular dtoTitular = new DTOTitular();
+				Titular titular = l.getTitular();
+				dtoTitular.setApellido(titular.getApellido());
+				dtoTitular.setDireccion(titular.getDireccion());
+				dtoTitular.setDonador(titular.getDonante());
+				dtoTitular.setFactorS(titular.getFactor());
+				dtoTitular.setFechaNac(titular.getFechaNac());
+				dtoTitular.setGrupoS(titular.getGrupoSanguineo());
+				dtoTitular.setNombre(titular.getNombre());
+				dtoTitular.setNroDoc(titular.getNumeroDoc());
+				dtoTitular.setTipoDoc(titular.getTipoDoc());
+				dtoLic.setTitular(dtoTitular);
+				return dtoLic;
+			}).collect(Collectors.toList());
+		return dtoLicenciaList;
 	}
 
 }

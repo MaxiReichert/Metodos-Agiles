@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -129,6 +130,48 @@ private static DAOLicenciaJPA instance = null;
 				.getSingleResult();
 		return result;
 	}
-
+	
+	@Override
+	public List<Licencia> obtenerLicenciasExpiradas(){
+		EntityManager em= MyEntityManager.get();
+		List<Licencia> result =  em.createQuery("SELECT l FROM Licencia l WHERE l.fechaVenc < ?1")
+				.setParameter(1, Calendar.getInstance().getTime())
+				.getResultList();
+		return result;
+	}
+	
+	@Override
+	public List<Licencia> obtenerLicenciasVigentes(int criterio) {
+		EntityManager em= MyEntityManager.get();
+		List<Licencia> result=null;
+		switch(criterio) {
+		case 1:
+			result=(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.activa= ?1 AND l.fechaVenc > ?2 ORDER BY l.titular.nombre, l.titular.apellido ASC")
+		.setParameter(1, true)
+		.setParameter(2, Calendar.getInstance().getTime())
+		.getResultList();
+			break;
+		case 2:
+			result=(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.activa= ?1 AND l.fechaVenc > ?2 ORDER BY l.titular.grupo ASC")
+			.setParameter(1, true)
+			.setParameter(2, Calendar.getInstance().getTime())
+			.getResultList();
+			break;
+		case 3:
+			result=(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.activa= ?1 AND l.fechaVenc > ?2 ORDER BY l.titular.factor ASC")
+			.setParameter(1, true)
+			.setParameter(2, Calendar.getInstance().getTime())
+			.getResultList();
+			break;
+		case 4:
+			result=(List<Licencia>) em.createQuery("SELECT l FROM Licencia l where l.activa= ?1 AND l.fechaVenc > ?2 ORDER BY l.titular.donante ASC")
+			.setParameter(1, true)
+			.setParameter(2, Calendar.getInstance().getTime())
+			.getResultList();
+			break;
+		}
+		em.close();
+		return result;
+	}
 
 }
