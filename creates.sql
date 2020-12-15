@@ -33,7 +33,7 @@ FOREIGN KEY(usuario) REFERENCES usuario(numero_legajo));
 
 create table licencia(
 id SERIAL NOT NULL,
-titular INTEGER NOT NULL,
+titular VARCHAR(10) NOT NULL,
 tipo VARCHAR(1) NOT NULL,
 fecha_otor DATE NOT NULL,
 fecha_venc DATE NOT NULL,
