@@ -244,11 +244,6 @@ public class UIAltaTitular {
 		lbDireccion.setFont(new Font("Serif", Font.PLAIN, 14));
 		frmAltaCliente.getContentPane().add(lbDireccion);
 		
-		JLabel lbClaseSolicitada = new JLabel("Clase solicitada");
-		lbClaseSolicitada.setBounds (25, 310, 151, 22);
-		lbClaseSolicitada.setFont(new Font("Serif", Font.PLAIN, 14));
-		frmAltaCliente.getContentPane().add(lbClaseSolicitada);
-		
 		JLabel lbFactorSanguineo = new JLabel("Factor sanguineo");
 		lbFactorSanguineo.setBounds (25, 230, 140, 22);
 		lbFactorSanguineo.setFont(new Font("Serif", Font.PLAIN, 14));

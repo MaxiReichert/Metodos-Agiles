@@ -14,10 +14,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dao.DAOLicenciaJPA;
+import dao.DAOTitularJPA;
+import dto.DTOTitular;
 import entidades.Licencia;
+import entidades.Titular;
 import entidades.Tramite;
 import entidades.Usuario;
 import exceptions.EmitirLicenciaException;
+import gestores.GestorTitular;
 import gestores.GestorUsuario;
 
 /**
@@ -29,34 +33,47 @@ public class DAOLicenciaTest {
 	/**
 	 * @throws EmitirLicenciaException
 	 */
-	@Test(expected = EmitirLicenciaException.class)
+/**	@Test(expected = EmitirLicenciaException.class)
 	public void exceptionEmitirLicencia() throws EmitirLicenciaException {
 		//pruebo que la excepción se lance de forma correcta
 		DAOLicenciaJPA.getInstance().darDeAltaLicencia(null, "1213123");
 	}
-
+*/
 	@Test
 	public void emitirLicenciaPrueba() {
 		Licencia lic = new Licencia();
-		lic.setCosto(15);
 		Date fechaOtor = Date.from(Instant.now());
-		Date fechaVenc = Date.from(Instant.now().plus(1, ChronoUnit.YEARS));
 		lic.setFechaOtor(fechaOtor);
-		lic.setFechaVenc(fechaVenc);
-		lic.setObservaciones("Necesita utilizar anteojos.");
+		String observaciones = "Necesita utilizar anteojos.";
+		lic.setObservaciones(observaciones);
 		Tramite tramite = new Tramite();
-		tramite.setFechaReali(Calendar.getInstance().getTime());
+		tramite.setFechaReali(fechaOtor);
 		Usuario usuario = GestorUsuario.obtenerUsuarioActual();
-		lic.setTramite(tramite);
 		tramite.setUsuario(usuario);
+		lic.setTramite(tramite);
+		String tipoLicencia = "A";
+		lic.setTipo(tipoLicencia);
+		String nroDoc = "42204789";
 		
-		lic.setId(-1);
+		Titular titular = DAOTitularJPA.getInstance().obtenerTitular(nroDoc);
+		lic.setTitular(titular);
+		
+		Licencia licDadaDeAlta = null;
 		
 		try {
-			DAOLicenciaJPA.getInstance().darDeAltaLicencia(lic, "-1");
+			licDadaDeAlta = DAOLicenciaJPA.getInstance().darDeAltaLicencia(lic, nroDoc);
 		} catch (EmitirLicenciaException e) {
+			e.printStackTrace();
 			fail("No se pudo dar de alta la licencia");
 		}
+		assertEquals(licDadaDeAlta.getCosto(), 28);
+		assertEquals(licDadaDeAlta.getFechaOtor(), fechaOtor);
+		assertEquals(licDadaDeAlta.getObservaciones(), observaciones);
+		assertTrue(licDadaDeAlta.getTipo().equals(tipoLicencia));
+		assertTrue(licDadaDeAlta.getTitular().getNumeroDoc().equals(nroDoc));
+		assertEquals(licDadaDeAlta.getTramite().getUsuario().getNumeroLegajo(), usuario.getNumeroLegajo());
+		assertEquals(licDadaDeAlta.getTramite().getFechaReali(), fechaOtor);
+	
 		
 	}
 

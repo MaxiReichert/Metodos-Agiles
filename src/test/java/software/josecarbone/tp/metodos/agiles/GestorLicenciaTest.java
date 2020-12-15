@@ -11,7 +11,9 @@ import com.itextpdf.text.DocumentException;
 
 import dto.DTOLicencia;
 import dto.DTOTitular;
+import exceptions.EmitirLicenciaException;
 import gestores.GestorLicencia;
+import gestores.GestorTitular;
 
 public class GestorLicenciaTest {
 
@@ -68,5 +70,51 @@ public class GestorLicenciaTest {
 			fail("La prueba ha fallado");
 		}
 	}
+	
+	@Test
+	public void emitirLicenciaTest() {
+		DTOLicencia dtoLic = new DTOLicencia();
+		DTOTitular dtoTitu = null;
+		dtoTitu = GestorTitular.getInstance().obtenerTitular("42204789");
+		dtoLic.setTipo("G");
+		dtoLic.setObservaciones("Necesita lentes");
+		dtoLic.setTitular(dtoTitu);
+		
+		try {
+			GestorLicencia.emitirLicencia(dtoLic);
+		} catch (EmitirLicenciaException e) {
+			fail();
+		}
+		
+	}
+	
+	@Test(expected = EmitirLicenciaException.class)
+	public void emitirLicenciaNoCumpleRequisitosTest() throws EmitirLicenciaException {
+		DTOLicencia dtoLic = new DTOLicencia();
+		DTOTitular dtoTitu = null;
+		dtoTitu = GestorTitular.getInstance().obtenerTitular("42204789");
+		dtoLic.setTipo("C");
+		dtoLic.setObservaciones("Necesita lentes");
+		dtoLic.setTitular(dtoTitu);
+		
+		GestorLicencia.emitirLicencia(dtoLic);
+	
+		
+	}
+	
+	@Test(expected = EmitirLicenciaException.class)
+	public void emitirLicenciaDelMismoTipoDosVecesFalla() throws EmitirLicenciaException {
+		DTOLicencia dtoLic = new DTOLicencia();
+		DTOTitular dtoTitu = null;
+		dtoTitu = GestorTitular.getInstance().obtenerTitular("42204789");
+		dtoLic.setTipo("F");
+		dtoLic.setObservaciones("Necesita lentes");
+		dtoLic.setTitular(dtoTitu);
+		
+		GestorLicencia.emitirLicencia(dtoLic);
+		GestorLicencia.emitirLicencia(dtoLic);
+}
+		
+	
 
 }

@@ -502,7 +502,7 @@ public class GestorLicencia {
 			if( timeToday - timeBorn  < SECONDS_IN_YEAR * 17) {
 				throw new EmitirLicenciaException("El titular debe tener 17 años o más para obtener una licencia de clase "+tipo);
 			}
-		}else if(tipo.equals("C") || tipo.equals("D") || tipo.equals("E") {
+		}else if(tipo.equals("C") || tipo.equals("D") || tipo.equals("E")) {
 			if( timeToday - timeBorn  < SECONDS_IN_YEAR * 21 ) {
 				throw new EmitirLicenciaException("El titular debe tener 21 años o más para obtener una licencia de clase "+tipo);
 			}

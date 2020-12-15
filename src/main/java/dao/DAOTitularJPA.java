@@ -47,8 +47,8 @@ private static DAOTitular instance = null;
 			result.setNumeroDoc(titularAux.getNumeroDoc());
 			result.setTipoDoc(titularAux.getTipoDoc());
 			em.flush();
-			etx.commit();
 		}catch(Exception e){
+			e.printStackTrace();
 			if(etx!=null) {
 				etx.rollback();
 			}
