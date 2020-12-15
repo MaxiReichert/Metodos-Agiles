@@ -56,6 +56,7 @@ private static DAOTitular instance = null;
 		finally {
 			em.close();
 		}
+		
 		return result;
 	}	
 	@Override
@@ -78,5 +79,18 @@ private static DAOTitular instance = null;
 		finally {
 			em.close();
 		}
+	}
+	/**
+	 * Verifica la existencia de un titular
+	 * Retorna true si existe y false en caso contrario
+	 * */
+	@Override
+	public boolean existeTitular(String doc) {
+		EntityManager em= MyEntityManager.get();
+		long result= (long) em.createQuery("SELECT count(t) FROM Titular t WHERE t.numeroDoc= ?1")
+				.setParameter(1, doc)
+				.getSingleResult();
+		em.close();
+		return result!=0;
 	}
 }

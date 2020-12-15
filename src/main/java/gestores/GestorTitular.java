@@ -11,11 +11,10 @@ import java.util.stream.Collectors;
 
 import dao.DAOTitular;
 import dao.DAOTitularJPA;
-import dto.DTOLicencia;
 import dto.DTOTitular;
+import dto.DTOLicencia;
 import entidades.Licencia;
 import entidades.Titular;
-
 
 public class GestorTitular {
 	private static GestorTitular GTitular ; // Patron Singleton -- Unica instancia tipo gestor creada.
@@ -43,7 +42,7 @@ public class GestorTitular {
 	
 	public DTOTitular obtenerTitular (String doc) {
 		DAOTitularJPA daoTitular = new DAOTitularJPA();
-		Titular titular = daoTitular.obtenerTitular (doc);
+		Titular titular = daoTitular.obtenerTitular(doc);
 		DTOTitular titularDTO = new DTOTitular();
 		titularDTO.setApellido(titular.getApellido());
 		titularDTO.setDireccion(titular.getDireccion());
@@ -95,10 +94,32 @@ public class GestorTitular {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new Exception("Error al guardar el titular");
+		}
 			
 		}
 		
+	public DTOTitular obtenerTitularCompleto (String doc){
+		DAOTitularJPA daoTitular = new DAOTitularJPA();
+		Titular titular = daoTitular.obtenerTitular (doc);
+		DTOTitular titularDTO = new DTOTitular();
+		titularDTO.setApellido(titular.getApellido());
+		titularDTO.setNombre(titular.getNombre());
+		titularDTO.setTipoDoc(titular.getTipoDoc());
+		titularDTO.setNroDoc(titular.getNumeroDoc());
+		titularDTO.setDireccion(titular.getDireccion());
+		titularDTO.setFechaNac(titular.getFechaNac());
+		titularDTO.setGrupoS(titular.getGrupoSanguineo());
+		titularDTO.setFactorS(titular.getFactor());
+		titularDTO.setDonador(titular.getDonante());
+		
+		return titularDTO;
+		
 	}
+	
+	public boolean existeTitular(String doc)throws Exception {
+		DAOTitular daoTitular= new DAOTitularJPA();
+		return daoTitular.existeTitular(doc);
+		}
 }
 	
 	

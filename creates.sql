@@ -8,7 +8,6 @@ apellido VARCHAR(20) NOT NULL,
 nombre VARCHAR(20) NOT NULL,
 fecha_nac DATE NOT NULL,
 direccion VARCHAR(50) NOT NULL,
-tipo_lic_solicitada VARCHAR(1) NOT NULL,
 grupo_sanguineo VARCHAR(2) NOT NULL,
 factor VARCHAR(2) NOT NULL,
 donante BOOLEAN NOT NULL,
@@ -41,8 +40,13 @@ fecha_venc DATE NOT NULL,
 costo INTEGER NOT NULL,
 observaciones VARCHAR(200),
 tramite INTEGER NOT NULL,
+activa boolean DEFAULT true NOT NULL,
+copia boolean DEFAULT false NOT NULL,
 PRIMARY KEY(id),
 FOREIGN KEY(titular) REFERENCES titular(numero_doc),
 FOREIGN KEY(tramite) REFERENCES tramite(id));
+<<<<<<< HEAD
 
 INSERT INTO usuario VALUES(1234, 'DNI', '13245678', 'Reichert', 'Maximiliano', '1994-06-06', 'Calle Siempre Viva 243', true);
+=======
+>>>>>>> 9747ecf7a71c05152cc787fb08edccfecbc1a213

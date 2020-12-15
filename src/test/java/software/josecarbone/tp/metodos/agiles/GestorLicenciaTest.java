@@ -21,7 +21,7 @@ public class GestorLicenciaTest {
 	public void imprimirTicketTest() {
 		DTOTitular dtoTitular= new DTOTitular();
 		DTOLicencia dtoLicencia= new DTOLicencia();
-		GestorLicencia gestorLicencia= new GestorLicencia();
+		GestorLicencia gestorLicencia= GestorLicencia.getInstance();
 		
 		dtoTitular.setApellido("Reichert");
 		dtoTitular.setNombre("Maximiliano");
@@ -30,7 +30,7 @@ public class GestorLicenciaTest {
 		dtoLicencia.setTipo("B");
 		
 		try {
-			gestorLicencia.ImprimirTicket(dtoTitular, dtoLicencia);
+			gestorLicencia.imprimirTicket(dtoTitular, dtoLicencia);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			fail("La prueba ha fallado");
@@ -45,7 +45,7 @@ public class GestorLicenciaTest {
 	public void imprimirLicenciaTest() {
 		DTOTitular dtoTitular= new DTOTitular();
 		DTOLicencia dtoLicencia= new DTOLicencia();
-		GestorLicencia gestor= new GestorLicencia();
+		GestorLicencia gestor= GestorLicencia.getInstance();
 		
 		dtoTitular.setApellido("Reichert");
 		dtoTitular.setDireccion("Calle Siempre Viva 234");
@@ -61,7 +61,7 @@ public class GestorLicenciaTest {
 		dtoLicencia.setObservaciones("Utiliza anteojos para conducir");
 		dtoLicencia.setTipo("G");
 		try {
-			gestor.ImprimirLicencia(dtoTitular, dtoLicencia);
+			gestor.imprimirLicencia(dtoTitular, dtoLicencia);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			fail("La prueba ha fallado");

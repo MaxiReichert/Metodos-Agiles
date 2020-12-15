@@ -101,6 +101,7 @@ public class UIEmitirLicencia {
 		titularSeleccionadoTextField.setColumns(10);
 		
 		JButton seleccionarTitularButton = new JButton("Seleccionar Titular");
+
 		seleccionarTitularButton.addActionListener(e-> {
 			if(nroDocTextField.getText().length()>3) {
 				DTOTitular titular = new DTOTitular();
@@ -125,7 +126,8 @@ public class UIEmitirLicencia {
 				
 			}
 		});
-
+		
+		
 		seleccionarTitularButton.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		seleccionarTitularButton.setBounds(544, 79, 220, 34);
 		frmAltaLicencia.getContentPane().add(seleccionarTitularButton);

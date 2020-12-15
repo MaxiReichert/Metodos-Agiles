@@ -1,5 +1,6 @@
 package dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,10 @@ public class DTOTitular {
 	private String factorS;
 	private Date fechaNac;
 	private List<DTOLicencia> licenciaList;
+	
+	public void crearListaDTOLicencia() {
+		this.licenciaList = new ArrayList<DTOLicencia>();
+	}
 	
 	public Date getFechaNac() {
 		return fechaNac;
@@ -90,5 +95,15 @@ public class DTOTitular {
 	public void setLicenciaList(List<DTOLicencia> licenciaDTOList) {
 		this.licenciaList = licenciaDTOList;
 	}
+	
+	public void addToLicenciaList(DTOLicencia licenciaDTO) {
+		System.out.println("Va bien 2");
+		this.licenciaList.add(licenciaDTO);
+		System.out.println("Va bien 3");
+	}
+	/*
+	public DTOLicencia getElementoLicenciaList(int i) {
+		return this.licenciaList.get(i);		
+	}*/
 	
 }

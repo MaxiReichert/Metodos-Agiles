@@ -67,6 +67,12 @@ public class Licencia implements Serializable {
     @OneToOne(optional = false)
     @JoinColumn(name = "tramite")
     private Tramite tramite;
+    @Basic(optional = false)
+    @Column(name = "activa")
+    private boolean activa;
+    @Basic(optional = false)
+    @Column(name = "copia")
+    private boolean copia;
 
     public Licencia() {
     }
@@ -146,8 +152,24 @@ public class Licencia implements Serializable {
     public void setTramite(Tramite tramite) {
         this.tramite = tramite;
     }
+    
+	public boolean isActiva() {
+		return activa;
+	}
+	
+	public void setActiva(boolean activa) {
+		this.activa = activa;
+	}
 
-    @Override
+	public boolean isCopia() {
+		return copia;
+	}
+
+	public void setCopia(boolean copia) {
+		this.copia = copia;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
@@ -257,4 +279,8 @@ public class Licencia implements Serializable {
         return "Entidades.Licencia[ id=" + id + " ]";
     }
     
+   
+ 
 }
+
+

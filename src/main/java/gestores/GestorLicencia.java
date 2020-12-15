@@ -9,9 +9,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 
 import com.itextpdf.text.BaseColor;
@@ -31,6 +33,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import dao.DAOLicencia;
 import dao.DAOLicenciaJPA;
 import dao.DAOTitularJPA;
 import dto.DTOLicencia;
@@ -46,12 +49,173 @@ import exceptions.EmitirLicenciaException;
  * @author Maxi
  */
 public class GestorLicencia {
-    
+	private static GestorLicencia GLicencia ; // Patron Singleton -- Unica instancia tipo gestor creada.
+
+	private GestorLicencia(){ // Patron Singleton -- Constructor privatizado para no permitir su uso.
+	}
+
+	public static GestorLicencia getInstance() { // Patron Singleton -- Devuelve la instancia, si no existe la crea
+		if ( GLicencia == null) {
+			GLicencia = new GestorLicencia();
+		}
+		return GLicencia;
+	}
+	
+	/**
+	 * Metodo que me permite obtener todas las licencias activas de un titular
+	 * */
+	public void obtenerLicencia (String doc, DTOTitular titular) throws Exception {
+		DAOLicenciaJPA daoLicencia = new DAOLicenciaJPA();
+		DTOLicencia dtoLicencia = new DTOLicencia();
+		List<DTOLicencia> dtoLicenciaList = new ArrayList<DTOLicencia>();
+		List<Licencia> licenciaList = daoLicencia.obtenerLicencia (doc);
+		
+		for(int i=0;i<licenciaList.size();i++) {
+			dtoLicencia = new DTOLicencia();
+			dtoLicencia.setCosto(licenciaList.get(i).getCosto());
+			dtoLicencia.setFechaOtor(licenciaList.get(i).getFechaOtor());
+			dtoLicencia.setFechaVenc(licenciaList.get(i).getFechaVenc());
+			dtoLicencia.setObservaciones(licenciaList.get(i).getObservaciones());
+			dtoLicencia.setTipo(licenciaList.get(i).getTipo());
+			dtoLicencia.setId(licenciaList.get(i).getId());
+			dtoLicencia.setIdTramite(licenciaList.get(i).getTramite().getId());
+			dtoLicenciaList.add(dtoLicencia);
+		}
+		titular.setLicenciaList(dtoLicenciaList);
+	}
+	
+	/**
+	 * Metodo que verifica si existen licencias para renovar
+	 * */
+	public boolean existeLicenciaRenovar(String nroDoc) throws Exception {
+		DAOLicencia daoL= new DAOLicenciaJPA();
+		return daoL.existenLicenciasRenovar(nroDoc);	
+	}
+	
+	/**
+	 * Metodo que renueva la licencia
+	 * */
+	public void renovarLicencia(DTOLicencia dtoLicencia) throws Exception {
+		DAOLicencia daoLicencia= new DAOLicenciaJPA();
+		
+		// creo y le seteo los valroes al titular
+		Titular titular= new Titular();
+		titular.setApellido(dtoLicencia.getTitular().getApellido());
+		titular.setDireccion(dtoLicencia.getTitular().getDireccion());
+		titular.setDonante(dtoLicencia.getTitular().getDonador());
+		titular.setFactor(dtoLicencia.getTitular().getFactorS());
+		titular.setFechaNac(dtoLicencia.getTitular().getFechaNac());
+		titular.setGrupoSanguineo(dtoLicencia.getTitular().getGrupoS());
+		titular.setNombre(dtoLicencia.getTitular().getNombre());
+		titular.setNumeroDoc(dtoLicencia.getTitular().getNroDoc());
+		titular.setTipoDoc(dtoLicencia.getTitular().getTipoDoc());
+		
+		//creo la licencia actualizar y le seteo los valores
+		Licencia vieja= new Licencia();
+		vieja.setId(dtoLicencia.getId());
+		vieja.setActiva(false);
+		vieja.setCopia(dtoLicencia.isCopia());
+		vieja.setCosto(dtoLicencia.getCosto());
+		vieja.setFechaOtor(dtoLicencia.getFechaOtor());
+		vieja.setFechaVenc(dtoLicencia.getFechaVenc());
+		vieja.setObservaciones(dtoLicencia.getObservaciones());
+		vieja.setTipo(dtoLicencia.getTipo());
+		vieja.setTitular(titular);
+		vieja.setTramite(daoLicencia.buscarTramite(dtoLicencia.getIdTramite()));
+		
+		// paso la licencia anterior a inactiva
+		daoLicencia.actualizarLicencia(vieja);
+		
+		//creo el nuevo tramite
+		Tramite tramite= new Tramite();
+		tramite.setFechaReali(new Date());
+		tramite.setUsuario(GestorUsuario.obtenerUsuarioActual());
+		
+		//creo la nueva licencia y le seteo los valores
+		Licencia nueva= new Licencia();
+		nueva.setFechaOtor(new Date());
+		nueva.setObservaciones(dtoLicencia.getObservaciones());
+		nueva.setCopia(false);
+		nueva.setActiva(true);
+		nueva.setTipo(dtoLicencia.getTipo());
+		nueva.setTitular(titular);
+		nueva.setTramite(tramite);
+		nueva.setFechaVenc(nueva.calcularVigencia());
+		nueva.setCosto(nueva.calcularCosto());
+		dtoLicencia.setCosto(nueva.getCosto());
+		dtoLicencia.setFechaOtor(nueva.getFechaOtor());
+		dtoLicencia.setFechaVenc(nueva.getFechaVenc());
+		try {// guardo la nueva licencia e imprimo ticket y licencia
+			daoLicencia.darDeAltaLicencia(nueva, dtoLicencia.getTitular().getNroDoc());
+			imprimirTicket(dtoLicencia.getTitular(), dtoLicencia);
+			imprimirLicencia(dtoLicencia.getTitular(), dtoLicencia);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
+		}
+	}
+	
+	/**
+	 * Este método emite una copia de una licencia
+	 * */
+	public void emitirCopia(DTOLicencia dtoLicencia) throws Exception {
+		DAOLicencia daoLicencia= new DAOLicenciaJPA();
+		
+		// creo y le seteo los valroes al titular
+		Titular titular= new Titular();
+		titular.setApellido(dtoLicencia.getTitular().getApellido());
+		titular.setDireccion(dtoLicencia.getTitular().getDireccion());
+		titular.setDonante(dtoLicencia.getTitular().getDonador());
+		titular.setFactor(dtoLicencia.getTitular().getFactorS());
+		titular.setFechaNac(dtoLicencia.getTitular().getFechaNac());
+		titular.setGrupoSanguineo(dtoLicencia.getTitular().getGrupoS());
+		titular.setNombre(dtoLicencia.getTitular().getNombre());
+		titular.setNumeroDoc(dtoLicencia.getTitular().getNroDoc());
+		titular.setTipoDoc(dtoLicencia.getTitular().getTipoDoc());
+		
+		Licencia licencia= new Licencia();
+		licencia.setId(dtoLicencia.getId());
+		licencia.setActiva(false);
+		licencia.setCopia(dtoLicencia.isCopia());
+		licencia.setCosto(dtoLicencia.getCosto());
+		licencia.setFechaOtor(dtoLicencia.getFechaOtor());
+		licencia.setFechaVenc(dtoLicencia.getFechaVenc());
+		licencia.setObservaciones(dtoLicencia.getObservaciones());
+		licencia.setTipo(dtoLicencia.getTipo());
+		licencia.setTitular(titular);
+		licencia.setTramite(daoLicencia.buscarTramite(dtoLicencia.getIdTramite()));
+		
+		// paso la licencia anterior a inactiva
+		daoLicencia.actualizarLicencia(licencia);
+		
+		//creo el nuevo tramite
+		Tramite tramite= new Tramite();
+		tramite.setFechaReali(new Date());
+		tramite.setUsuario(GestorUsuario.obtenerUsuarioActual());
+		
+		//seteo los cambios para el nuevo registro de licencia
+		licencia.setActiva(true);
+		licencia.setCopia(true);
+		licencia.setTramite(tramite);
+		licencia.setId(null);
+		
+		try {// guardo la nueva licencia e imprimo ticket y licencia
+			daoLicencia.darDeAltaLicencia(licencia, dtoLicencia.getTitular().getNroDoc());
+			imprimirTicket(dtoLicencia.getTitular(), dtoLicencia);
+			imprimirLicencia(dtoLicencia.getTitular(), dtoLicencia);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new EmitirLicenciaException("Error al guardar la licencia en la base de datos. Si el problema persiste, contacte al administrador del sistema");
+		}
+	}
+	
 	private final static long SECONDS_IN_YEAR = 31536000;
 
-	public void ImprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
-		DAOLicenciaJPA daoLicencia= new DAOLicenciaJPA(); //creo una instancia de la DAO de licencia
-		String numeroFactura= Long.toString(daoLicencia.ObtenerNumeroFactura()); //obtengo el numero de la factura
+	public void imprimirTicket(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
+		DAOLicencia daoLicencia= new DAOLicenciaJPA(); //creo una instancia de la DAO de licencia
+		String numeroFactura= Long.toString(daoLicencia.obtenerNumeroFactura()); //obtengo el numero de la factura
 		
 		Document documentoTicket= new Document(); //creo documento
         documentoTicket.setPageSize(PageSize.A4); //seteo tamaño de pagina
@@ -254,7 +418,7 @@ public class GestorLicencia {
         
 	}
 
-	public void ImprimirLicencia(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
+	public void imprimirLicencia(DTOTitular dtoTitular, DTOLicencia dtoLicencia) throws IOException, DocumentException{
 		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy"); //formato fecha
 		Document documento= new Document(); //creo el documento
         documento.setPageSize(PageSize.A4.rotate()); //establezco tamaño de pagina en A4, orientacion horizontal
@@ -455,7 +619,12 @@ public class GestorLicencia {
         observaciones.setLeading(40); //seteo el interlineado del parrafo
         observaciones.setTabSettings(new TabSettings(28)); //seteo el tabulado
         observaciones.add(Chunk.TABBING); //aplico el tabulado
-        observaciones.add(new Chunk("OBSERVACIONES: "+dtoLicencia.getObservaciones().toUpperCase()));
+        if(dtoLicencia.getObservaciones()!=null) {
+        	observaciones.add(new Chunk("OBSERVACIONES: "+dtoLicencia.getObservaciones().toUpperCase()));
+        }
+        else {
+        	observaciones.add(new Chunk("OBSERVACIONES:"));
+        }
         documento.add(observaciones); //añado el parrafo al documento
         
        //linea que dice si el titular es donante o no
@@ -543,6 +712,10 @@ public class GestorLicencia {
 		nuevaLicencia.setFechaOtor(Calendar.getInstance().getTime());
 		
 		nuevaLicencia.setObservaciones(DTOLicencia.getObservaciones());
+
+		nuevaLicencia.setActiva(true);
+		nuevaLicencia.setCopia(false);
+		nuevaLicencia.setTitular(titular);
 		Tramite tramite = new Tramite();
 		tramite.setFechaReali(Calendar.getInstance().getTime());
 		Usuario usuario = GestorUsuario.obtenerUsuarioActual();
