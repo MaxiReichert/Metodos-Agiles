@@ -29,7 +29,7 @@ public class UIListaLicenciasVigentes {
 
 	
 	public static void iniciar() {
-		final Marco frmListaLicenciasVigentes = new Marco(800,600,"Gestor de licencias - Alta titular");
+		final Marco frmListaLicenciasVigentes = new Marco(800,600,"Gestor de licencias - Listado licencias vigentes");
 		frmListaLicenciasVigentes.getContentPane().setLayout(null);
 		frmListaLicenciasVigentes.setLocationRelativeTo(null);
 		frmListaLicenciasVigentes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

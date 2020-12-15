@@ -66,6 +66,9 @@ public class UIRenovarLicenciaEmitirCopia {
 	
 	public static void iniciar(int tipo) {
 		final Marco frmRenovarLicencia = new Marco(800,600,"Gestor de licencias - Emitir copia");
+		if (tipo ==1) {
+			frmRenovarLicencia.setTitle("Gestor de licencias - Renovar licencia");
+		}
 		frmRenovarLicencia.getContentPane().setLayout(null);
 		frmRenovarLicencia.setLocationRelativeTo(null);
 		frmRenovarLicencia.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
