@@ -35,6 +35,11 @@ public class UIPrincipal {
 		frmPrincipal.getContentPane().add(btnAltaUsuario);
 		
 		JButton btnRenovarLicencia = new JButton("Renovar licencia");
+		btnRenovarLicencia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				UIRenovarLicenciaEmitirCopia.iniciar(1);
+			}
+		});
 		btnRenovarLicencia.setBounds(35, 138, 124, 23);
 		frmPrincipal.getContentPane().add(btnRenovarLicencia);
 		
@@ -60,6 +65,7 @@ public class UIPrincipal {
 		JButton btnEmitirCopia = new JButton("Emitir copia");
 		btnEmitirCopia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				UIRenovarLicenciaEmitirCopia.iniciar(2);
 			}
 		});
 		btnEmitirCopia.setBounds(192, 138, 124, 23);
