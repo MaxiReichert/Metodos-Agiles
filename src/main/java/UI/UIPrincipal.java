@@ -31,26 +31,28 @@ public class UIPrincipal {
 				frmPrincipal.dispose();
 			}
 		});
-		btnAltaUsuario.setBounds(35, 38, 124, 23);
+		btnAltaUsuario.setBounds(35, 38, 170, 23);
 		frmPrincipal.getContentPane().add(btnAltaUsuario);
 		
 		JButton btnRenovarLicencia = new JButton("Renovar licencia");
 		btnRenovarLicencia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				UIRenovarLicenciaEmitirCopia.iniciar(1);
+				frmPrincipal.dispose();
 			}
 		});
-		btnRenovarLicencia.setBounds(35, 138, 124, 23);
+		btnRenovarLicencia.setBounds(35, 245, 170, 23);
 		frmPrincipal.getContentPane().add(btnRenovarLicencia);
 		
-		JButton btnListarLicencia = new JButton("Listar licencias");
-		btnListarLicencia.addActionListener(new ActionListener() {
+		JButton btnLicenciasVigentes = new JButton("Licencias vigentes");
+		btnLicenciasVigentes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UIAltaTitular.iniciar();
+				UIListaLicenciasVigentes.iniciar();
+				frmPrincipal.dispose();
 			}
 		});
-		btnListarLicencia.setBounds(35, 172, 124, 23);
-		frmPrincipal.getContentPane().add(btnListarLicencia);
+		btnLicenciasVigentes.setBounds(35, 367, 170, 23);
+		frmPrincipal.getContentPane().add(btnLicenciasVigentes);
 		
 		JButton btnModificarUsuario = new JButton("Modificar usuario");
 		btnModificarUsuario.addActionListener(new ActionListener() {
@@ -59,20 +61,21 @@ public class UIPrincipal {
 				frmPrincipal.dispose();
 			}
 		});
-		btnModificarUsuario.setBounds(192, 38, 124, 23);
+		btnModificarUsuario.setBounds(256, 38, 170, 23);
 		frmPrincipal.getContentPane().add(btnModificarUsuario);
 		
 		JButton btnEmitirCopia = new JButton("Emitir copia");
 		btnEmitirCopia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UIRenovarLicenciaEmitirCopia.iniciar(2);
+				frmPrincipal.dispose();
 			}
 		});
-		btnEmitirCopia.setBounds(192, 138, 124, 23);
+		btnEmitirCopia.setBounds(256, 245, 170, 23);
 		frmPrincipal.getContentPane().add(btnEmitirCopia);
 		
 		JButton btnAltaTitular = new JButton("Alta titular");
-		btnAltaTitular.setBounds(192, 98, 124, 23);
+		btnAltaTitular.setBounds(35, 98, 170, 23);
 		btnAltaTitular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UIAltaTitular.iniciar();
@@ -93,7 +96,7 @@ public class UIPrincipal {
 				frmPrincipal.dispose();
 			}
 		});
-		btnEmitirLicencia.setBounds(35, 98, 124, 23);
+		btnEmitirLicencia.setBounds(35, 184, 170, 23);
 		frmPrincipal.getContentPane().add(btnEmitirLicencia);
 		
 		JButton btnSalir = new JButton("Salir");
@@ -108,7 +111,16 @@ public class UIPrincipal {
 		});
 		btnSalir.setBounds(569, 480, 89, 23);
 		frmPrincipal.getContentPane().add(btnSalir);
+		
+		JButton btnLicenciasExpiradas = new JButton("Licencias expiradas");
+		btnLicenciasExpiradas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				UIListaLicenciasExpiradas.iniciar();
+				frmPrincipal.dispose();
+			}
+		});
+		btnLicenciasExpiradas.setBounds(256, 367, 170, 23);
+		frmPrincipal.getContentPane().add(btnLicenciasExpiradas);
 
 	}
-
 }

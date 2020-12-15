@@ -1,6 +1,8 @@
 package UI;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -17,22 +19,17 @@ import gestores.GestorLicencia;
 public class UIListaLicenciasExpiradas {
 	
 	private JFrame frmListaLicenciasExpiradas;
-	private DefaultTableModel modelo;
-	private JTable tablaLicencias;
-	private List<DTOLicencia> listaLicencias;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
+	private static DefaultTableModel modelo;
+	private static JTable tablaLicencias;
+	private static List<DTOLicencia> listaLicencias;
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
 	
-	public UIListaLicenciasExpiradas() {
-		initialize();
-		this.frmListaLicenciasExpiradas.setVisible(true);
-	}
 	
-	private void initialize() {
-		frmListaLicenciasExpiradas= new JFrame();
-		frmListaLicenciasExpiradas.setTitle("Listado Licencias Expiradas");
-		frmListaLicenciasExpiradas.setBounds(100,100,800,600);
-		frmListaLicenciasExpiradas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public static void iniciar() {
+		final Marco frmListaLicenciasExpiradas = new Marco(800,600,"Gestor de licencias - Listado licencias expiradas");
 		frmListaLicenciasExpiradas.getContentPane().setLayout(null);
+		frmListaLicenciasExpiradas.setLocationRelativeTo(null);
+		frmListaLicenciasExpiradas.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		modelo= new DefaultTableModel();
 		modelo.addColumn("Tipo Licencia");
@@ -71,8 +68,16 @@ public class UIListaLicenciasExpiradas {
 		tablaLicencias.setBounds(100, 70, 600, 400);
 		frmListaLicenciasExpiradas.add(tablaLicencias);
 		
-		JButton btnAtras = new JButton("Atrás"); //boton atrás, FALTA UI MENU PARA ENLAZAR
-		btnAtras.setBounds(150, 510, 181, 30);
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.addActionListener(new ActionListener() {
+			   @Override
+			public void actionPerformed(ActionEvent e) {
+				UIPrincipal.iniciar();
+				 frmListaLicenciasExpiradas.dispose();
+			}
+		});
+		btnAtras.setBounds(545, 493, 89, 23);
 		frmListaLicenciasExpiradas.getContentPane().add(btnAtras);
+		}
 	}
-}
+

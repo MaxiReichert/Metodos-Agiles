@@ -19,24 +19,20 @@ import gestores.GestorLicencia;
 
 public class UIListaLicenciasVigentes {
 	private JFrame frmListaLicenciasVigentes;
-	private DefaultTableModel modelo;
-	private JTable tablaLicencias;
-	private List<DTOLicencia> listaLicencias;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
+	private static DefaultTableModel modelo;
+	private static JTable tablaLicencias;
+	private static List<DTOLicencia> listaLicencias;
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
 	int criterio=1;
-	GestorLicencia gestorL= GestorLicencia.getInstance();
+	static GestorLicencia gestorL= GestorLicencia.getInstance();
 	
-	public UIListaLicenciasVigentes() {
-		initialize();
-		this.frmListaLicenciasVigentes.setVisible(true);
-	}
+
 	
-	private void initialize() {
-		frmListaLicenciasVigentes= new JFrame();
-		frmListaLicenciasVigentes.setTitle("Listado Licencias Expiradas");
-		frmListaLicenciasVigentes.setBounds(100,100,800,600);
-		frmListaLicenciasVigentes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public static void iniciar() {
+		final Marco frmListaLicenciasVigentes = new Marco(800,600,"Gestor de licencias - Alta titular");
 		frmListaLicenciasVigentes.getContentPane().setLayout(null);
+		frmListaLicenciasVigentes.setLocationRelativeTo(null);
+		frmListaLicenciasVigentes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		modelo= new DefaultTableModel();
 		ButtonGroup radioGroup= new ButtonGroup();
@@ -278,8 +274,16 @@ public class UIListaLicenciasVigentes {
 		tablaLicencias.setBounds(90, 70, 600, 400);
 		frmListaLicenciasVigentes.add(tablaLicencias);
 		
-		JButton btnAtras = new JButton("Atrás"); //boton atrás, FALTA UI MENU PARA ENLAZAR
-		btnAtras.setBounds(150, 510, 181, 30);
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.addActionListener(new ActionListener() {
+			   @Override
+			public void actionPerformed(ActionEvent e) {
+				UIPrincipal.iniciar();
+				 frmListaLicenciasVigentes.dispose();
+			}
+		});
+		btnAtras.setBounds(545, 493, 89, 23);
 		frmListaLicenciasVigentes.getContentPane().add(btnAtras);
+		}
 	}
-}
+	
