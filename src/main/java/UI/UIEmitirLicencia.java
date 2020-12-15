@@ -33,92 +33,69 @@ import java.awt.event.MouseEvent;
 
 public class UIEmitirLicencia {
 
-	private JFrame frmAltaLicencia;
-	private JTextField nroDocTextField;
-	private JTextField titularSeleccionadoTextField;
-	private JFrame previous;
-	private DTOTitular dtoTitularSeleccionado = null;
+	private static JFrame frmAltaLicencia;
+	private static JTextField nroDocTextField;
+	private static JTextField titularSeleccionadoTextField;
+	private static JFrame previous;
+	private static DTOTitular dtoTitularSeleccionado = null; 
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIEmitirLicencia window = new UIEmitirLicencia();
-					window.frmAltaLicencia.setVisible(true);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-
 
 	/**
 	 * Create the application.
+	 * @wbp.parser.entryPoint
 	 */
-	public UIEmitirLicencia() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frmAltaLicencia = new JFrame();
-		frmAltaLicencia.setTitle("Emitir Licencia");
-		frmAltaLicencia.setBounds(0, 0, 800, 600);
-		frmAltaLicencia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public static void iniciar() {
+		final Marco frmAltaLicencia = new Marco(800,600,"Gestor de licencias - Emitir licencia");
 		frmAltaLicencia.getContentPane().setLayout(null);
+		frmAltaLicencia.setLocationRelativeTo(null);
+		frmAltaLicencia.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JComboBox<String> comboTipoDNI = new JComboBox<String>();
 		comboTipoDNI.setModel(new DefaultComboBoxModel(tipoDocumento.values()));
-		comboTipoDNI.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		comboTipoDNI.setBounds(97, 79, 164, 35);
+		comboTipoDNI.setFont(new Font("Serif", Font.PLAIN, 14));
+		comboTipoDNI.setBounds(131, 11, 164, 22);
 		frmAltaLicencia.getContentPane().add(comboTipoDNI);
 		
 		nroDocTextField = new JTextField();
-		nroDocTextField.setFont(new Font("Monospaced", Font.BOLD, 16));
-		nroDocTextField.setBounds(343, 79, 173, 34);
+		nroDocTextField.setFont(new Font("Serif", Font.PLAIN, 14));
+		nroDocTextField.setBounds(445, 11, 173, 22);
 		frmAltaLicencia.getContentPane().add(nroDocTextField);
 		nroDocTextField.setColumns(10);
 		
 		JLabel titularSeleccionadoLabel = new JLabel("Titular Seleccionado");
-		titularSeleccionadoLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		titularSeleccionadoLabel.setBounds(79, 159, 227, 31);
+		titularSeleccionadoLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+		titularSeleccionadoLabel.setBounds(10, 157, 155, 22);
 		frmAltaLicencia.getContentPane().add(titularSeleccionadoLabel);
 		
 		titularSeleccionadoTextField = new JTextField();
-		titularSeleccionadoTextField.setFont(new Font("Monospaced", Font.PLAIN, 16));
+		titularSeleccionadoTextField.setFont(new Font("Serif", Font.PLAIN, 14));
 		titularSeleccionadoTextField.setForeground(Color.RED);
 		titularSeleccionadoTextField.setEditable(false);
-		titularSeleccionadoTextField.setBounds(319, 157, 418, 34);
+		titularSeleccionadoTextField.setBounds(200, 157, 418, 22);
 		frmAltaLicencia.getContentPane().add(titularSeleccionadoTextField);
 		titularSeleccionadoTextField.setColumns(10);
 		
 		JButton seleccionarTitularButton = new JButton("Seleccionar Titular");
-
 		seleccionarTitularButton.addActionListener(e-> {
 			if(nroDocTextField.getText().length()>3) {
 				DTOTitular titular = new DTOTitular();
 				try {
 					titular = GestorTitular.getInstance().obtenerTitular(nroDocTextField.getText().trim());
-					if(titular!=null) {
+					if(titular.getNroDoc() != null) {
 						titularSeleccionadoTextField.setText('['+titular.getTipoDoc()+"] " + titular.getNroDoc() + " - "+titular.getApellido()+", "+titular.getNombre());
 						titularSeleccionadoTextField.setForeground(Color.GREEN);
-						this.dtoTitularSeleccionado = titular;
+						dtoTitularSeleccionado = titular;
 					}
 					else {
-						this.dtoTitularSeleccionado = null;
+						dtoTitularSeleccionado = null;
 						titularSeleccionadoTextField.setText("TITULAR NO ENCONTRADO");
 						titularSeleccionadoTextField.setForeground(Color.RED);
 					}
 				} catch (Exception ex){
-					this.dtoTitularSeleccionado = null;
+					dtoTitularSeleccionado = null;
 					titularSeleccionadoTextField.setText("ERROR DEL SISTEMA AL BUSCAR EL TITULAR");
 					titularSeleccionadoTextField.setForeground(Color.RED);
 					System.err.println(ex.getMessage());
@@ -126,61 +103,63 @@ public class UIEmitirLicencia {
 				
 			}
 		});
-		
-		
-		seleccionarTitularButton.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		seleccionarTitularButton.setBounds(544, 79, 220, 34);
+
+		seleccionarTitularButton.setFont(new Font("Serif", Font.PLAIN, 14));
+		seleccionarTitularButton.setBounds(445, 56, 173, 22);
 		frmAltaLicencia.getContentPane().add(seleccionarTitularButton);
 		
 
 		
 		JComboBox<String> comboTipoLicencia = new JComboBox<String>();
 		comboTipoLicencia.setModel(new DefaultComboBoxModel<String>(new String[] {"A", "B", "C", "D", "E", "F", "G"}));
-		comboTipoLicencia.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		comboTipoLicencia.setBounds(319, 258, 95, 35);
+		comboTipoLicencia.setFont(new Font("Serif", Font.PLAIN, 14));
+		comboTipoLicencia.setBounds(200, 218, 101, 22);
 		DefaultListCellRenderer centeredListRenderer = new DefaultListCellRenderer();
 	    centeredListRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER); // center-aligned items
 	    comboTipoLicencia.setRenderer(centeredListRenderer);
 		frmAltaLicencia.getContentPane().add(comboTipoLicencia);
 		
 		JButton emitirLicenciaButton = new JButton("Emitir Licencia");
-		emitirLicenciaButton.setForeground(Color.BLUE);
-		emitirLicenciaButton.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		emitirLicenciaButton.setBounds(449, 465, 220, 35);
+		emitirLicenciaButton.setForeground(Color.BLACK);
+		emitirLicenciaButton.setFont(new Font("Serif", Font.PLAIN, 14));
+		emitirLicenciaButton.setBounds(587, 494, 155, 22);
 		
 		frmAltaLicencia.getContentPane().add(emitirLicenciaButton);
 		
 		
 		JLabel tipoLicenciaLabel = new JLabel("Tipo Licencia");
-		tipoLicenciaLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		tipoLicenciaLabel.setBounds(107, 260, 154, 31);
+		tipoLicenciaLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+		tipoLicenciaLabel.setBounds(11, 214, 154, 31);
 		frmAltaLicencia.getContentPane().add(tipoLicenciaLabel);
 		
 		JButton cancelarButton = new JButton("Cancelar");
 		cancelarButton.addActionListener(e-> {
-			
+			UIPrincipal.iniciar();
+			 frmAltaLicencia.dispose();
 		});
-		cancelarButton.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		cancelarButton.setBounds(130, 465, 220, 35);
+		cancelarButton.setFont(new Font("Serif", Font.PLAIN, 14));
+		cancelarButton.setBounds(423, 494, 131, 22);
 		frmAltaLicencia.getContentPane().add(cancelarButton);
 		
 		JLabel observacionesLabel = new JLabel("Observaciones");
-		observacionesLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		observacionesLabel.setBounds(107, 337, 142, 31);
+		observacionesLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+		observacionesLabel.setBounds(10, 304, 142, 31);
 		frmAltaLicencia.getContentPane().add(observacionesLabel);
 		
 		JTextArea observacionesTextArea = new JTextArea();
-		observacionesTextArea.setBounds(319, 342, 285, 74);
+		observacionesTextArea.setForeground(Color.BLACK);
+		observacionesTextArea.setBackground(Color.WHITE);
+		observacionesTextArea.setBounds(10, 346, 452, 100);
 		frmAltaLicencia.getContentPane().add(observacionesTextArea);
 		
-		JLabel lblNrodoc = new JLabel("Nro Doc");
-		lblNrodoc.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		lblNrodoc.setBounds(266, 81, 73, 31);
+		JLabel lblNrodoc = new JLabel("Nro documento");
+		lblNrodoc.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblNrodoc.setBounds(324, 11, 111, 22);
 		frmAltaLicencia.getContentPane().add(lblNrodoc);
 		
-		JLabel lblTipodoc = new JLabel("Tipo Doc");
-		lblTipodoc.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		lblTipodoc.setBounds(10, 81, 89, 31);
+		JLabel lblTipodoc = new JLabel("Tipo documento");
+		lblTipodoc.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblTipodoc.setBounds(10, 7, 111, 31);
 		frmAltaLicencia.getContentPane().add(lblTipodoc);
 		
 		emitirLicenciaButton.addActionListener(e-> {
@@ -197,15 +176,14 @@ public class UIEmitirLicencia {
 				ex.printStackTrace();
 			}
 		});
+		
 	}
-
-
 
 	/**
 	 * @return
 	 * @throws EmitirLicenciaException 
 	 */
-	private DTOLicencia generarDTOLicencia(String tipoLicencia, String observaciones) throws EmitirLicenciaException {
+	private static DTOLicencia generarDTOLicencia(String tipoLicencia, String observaciones) throws EmitirLicenciaException {
 		
 		
 		

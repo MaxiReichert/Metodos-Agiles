@@ -22,33 +22,24 @@ import enumeradores.tipoDocumento;
 import gestores.GestorUsuario;
 
 public class UIModificarUsuario {
-	private JFrame frmModificarUsuario;
-	private JTextField tfNroDoc;
-	private JTextField tfNroLegajo;
-	private JTextField tfNombre;
-	private JTextField tfApellido;
-	private JTextField tfDireccion;
-	private JTextField tfFechaNac;
-	private JButton btnActualizar;
-	private DTOUsuario dtoUsuario;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
-	private GestorUsuario gestorUsuario;
+	private static JFrame frmModificarUsuario;
+	private static JTextField tfNroDoc;
+	private static JTextField tfNroLegajo;
+	private static JTextField tfNombre;
+	private static JTextField tfApellido;
+	private static JTextField tfDireccion;
+	private static JTextField tfFechaNac;
+	private static JButton btnActualizar;
+	private static DTOUsuario dtoUsuario;
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
+	private static GestorUsuario gestorUsuario;
 	
-	/**
-	 * El constructo se encarga de incializar los elementos
-	 * y una vez hecho esto visivilizar la pantalla
-	 * */
-	public UIModificarUsuario() {
-		initialize();
-		this.frmModificarUsuario.setVisible(true);
-	}
-	
-	private void initialize() {
-		frmModificarUsuario = new JFrame();
-		frmModificarUsuario.setTitle("Modiciar Usuario");
-		frmModificarUsuario.setBounds(100, 100, 800, 600);
-		frmModificarUsuario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	public static void iniciar() {
+		final Marco frmModificarUsuario = new Marco(800,600,"Gestor de licencias - Modificar usuario");
 		frmModificarUsuario.getContentPane().setLayout(null);
+		frmModificarUsuario.setLocationRelativeTo(null);
+		frmModificarUsuario.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		//TipoDocumento
 	    final JComboBox comboTipoDoc = new JComboBox();
@@ -108,7 +99,7 @@ public class UIModificarUsuario {
 		
 		//nombre
 		tfNombre = new JTextField();
-		tfNombre.setBounds(220, 110, 181, 20);
+		tfNombre.setBounds(220, 70, 181, 20);
 		tfNombre.setColumns(10);
 		tfNombre.addKeyListener(new KeyAdapter() { //El nombre tiene hasta 15 letras
 			@Override
@@ -322,12 +313,24 @@ public class UIModificarUsuario {
 			}
 		});
 		frmModificarUsuario.getContentPane().add(btnActualizar);
+		
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.addActionListener(new ActionListener() {
+			   @Override
+			public void actionPerformed(ActionEvent e) {
+				UIPrincipal.iniciar();
+				 frmModificarUsuario.dispose();
+			}
+		});
+		btnAtras.setBounds(545, 493, 89, 23);
+		frmModificarUsuario.getContentPane().add(btnAtras);
 	}
+	
 	
 	/**
 	 * Metodo que verifica que los campos ediatables no esten vacios
 	 * */
-	private boolean camposVacios() {
+	private static boolean camposVacios() {
 		if(tfNombre.getText().length()==0 || tfApellido.getText().length()==0 ||
 				tfDireccion.getText().length()==0) {
 			return true;
