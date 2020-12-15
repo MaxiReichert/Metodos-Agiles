@@ -32,12 +32,7 @@ public class GestorTitular {
 	public boolean comprobarExistencia (String doc) { //Busca en BD si existe una entrada en la tabla titular con el nroDoc = doc, si existe, retorna true
 
 		DAOTitularJPA daoTitular = new DAOTitularJPA();
-		boolean ret = false;
-		Titular unTitular = daoTitular.obtenerTitular(doc);
-		if (unTitular != null) {
-			ret = true; 
-		}
-		return ret;
+		return daoTitular.existeTitular(doc);
 	}
 	
 	public DTOTitular obtenerTitular (String doc) {

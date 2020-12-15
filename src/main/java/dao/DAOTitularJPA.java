@@ -56,7 +56,6 @@ private static DAOTitular instance = null;
 		finally {
 			em.close();
 		}
-		
 		return result;
 	}	
 	@Override
