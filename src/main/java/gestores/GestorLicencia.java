@@ -738,6 +738,26 @@ public class GestorLicencia {
 			
 
 	}
+	
+	public List<DTOLicencia> buscarLicenciasExpiradas() {
+		DAOLicencia dao= new DAOLicenciaJPA();
+		List<Licencia> listaLicencias=dao.obtenerLicenciasExpiradas();
+		List<DTOLicencia> listaDto= new ArrayList<DTOLicencia>();
+		for(Licencia l: listaLicencias) {
+			DTOLicencia dtoL= new DTOLicencia();
+			DTOTitular dtoT= new DTOTitular();
+			dtoT.setApellido(l.getTitular().getApellido());
+			dtoT.setNombre(l.getTitular().getNombre());
+			dtoT.setTipoDoc(l.getTitular().getTipoDoc());
+			dtoT.setNroDoc(l.getTitular().getNumeroDoc());
+			dtoL.setTitular(dtoT);
+			dtoL.setTipo(l.getTipo());
+			dtoL.setFechaOtor(l.getFechaOtor());
+			dtoL.setFechaVenc(l.getFechaVenc());
+			listaDto.add(dtoL);
+		}
+		return listaDto;
+	}
 
 }
 

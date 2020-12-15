@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -129,6 +130,14 @@ private static DAOLicenciaJPA instance = null;
 				.getSingleResult();
 		return result;
 	}
-
+	
+	@Override
+	public List<Licencia> obtenerLicenciasExpiradas(){
+		EntityManager em= MyEntityManager.get();
+		List<Licencia> result =  em.createQuery("SELECT l FROM Licencia l WHERE l.fechaVenc < ?1")
+				.setParameter(1, Calendar.getInstance().getTime())
+				.getResultList();
+		return result;
+	}
 
 }
