@@ -3,7 +3,7 @@ create database metodos_agiles;
 
 create table titular(
 tipo_doc VARCHAR(3) NOT NULL,
-numero_doc INTEGER NOT NULL,
+numero_doc VARCHAR(10) NOT NULL,
 apellido VARCHAR(20) NOT NULL,
 nombre VARCHAR(20) NOT NULL,
 fecha_nac DATE NOT NULL,
@@ -17,7 +17,7 @@ PRIMARY KEY(numero_doc));
 create table usuario(
 numero_legajo INTEGER NOT NULL,
 tipo_doc VARCHAR(3) NOT NULL,
-numero_doc INTEGER NOT NULL,
+numero_doc VARCHAR(10) NOT NULL,
 apellido VARCHAR(20) NOT NULL,
 nombre VARCHAR(20) NOT NULL,
 fecha_nac DATE NOT NULL,
