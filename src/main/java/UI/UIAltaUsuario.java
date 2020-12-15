@@ -25,33 +25,26 @@ import gestores.GestorUsuario;
 public class UIAltaUsuario {
 	
 	private JFrame frmAltaUsuario;
-	private JTextField tfNroDoc;
-	private JTextField tfNroLegajo;
-	private JTextField tfNombre;
-	private JTextField tfApellido;
-	private JTextField tfDireccion;
-	private DTOUsuario dtoUsuario;
+	private static JTextField tfNroDoc;
+	private static JTextField tfNroLegajo;
+	private static JTextField tfNombre;
+	private static JTextField tfApellido;
+	private static JTextField tfDireccion;
+	private static DTOUsuario dtoUsuario;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat ("dd-MM-yyyy");
-	private GestorUsuario gestorUsuario;
+	private static GestorUsuario gestorUsuario;
 	
 	
 	/**
 	 * El constructo se encarga de incializar los elementos
 	 * y una vez hecho esto visivilizar la pantalla
+	 * @wbp.parser.entryPoint
 	 * */
-	public UIAltaUsuario() {
-		initialize();
-		this.frmAltaUsuario.setVisible(true);
-	}
-
-
-
-	private void initialize() {
-		frmAltaUsuario = new JFrame();
-		frmAltaUsuario.setTitle("Alta Usuario");
-		frmAltaUsuario.setBounds(100, 100, 800, 600);
-		frmAltaUsuario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public static void iniciar() {
+		final Marco frmAltaUsuario = new Marco(800,600,"Gestor de licencias - Alta usuario");
 		frmAltaUsuario.getContentPane().setLayout(null);
+		frmAltaUsuario.setLocationRelativeTo(null);
+		frmAltaUsuario.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		//TipoDocumento
 	    final JComboBox comboTipoDoc = new JComboBox();
@@ -309,11 +302,26 @@ public class UIAltaUsuario {
 			}
 			
 		});
-		frmAltaUsuario.add(btnCrear);
+		frmAltaUsuario.getContentPane().add(btnCrear);
+		
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.addActionListener(new ActionListener() {
+			   @Override
+			public void actionPerformed(ActionEvent e) {
+				UIPrincipal.iniciar();
+				 frmAltaUsuario.dispose();
+			}
+		});
+		btnAtras.setBounds(545, 493, 89, 23);
+		frmAltaUsuario.getContentPane().add(btnAtras);
 	}
 	
+	
+	
+	
+	
 	//metodo que verifica que no existan campos vacios
-	private boolean camposVacios() {
+	private static boolean camposVacios() {
 		boolean vacios=false;
 		if(tfApellido.getText().length() == 0 || tfNombre.getText().length() == 0 ||
 				tfNroDoc.getText().length() == 0 || tfNroLegajo.getText().length() == 0 ||
@@ -323,6 +331,5 @@ public class UIAltaUsuario {
 		}
 			
 		return vacios;
-	}
-
+	}	
 }
